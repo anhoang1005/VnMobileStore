@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -27,39 +28,15 @@ public class ProductEntity {
 	@Column(name = "product_slug", columnDefinition = "TEXT")
 	private String productSlug;
 	
-	@Column(name = "thumbnail", columnDefinition = "VARCHAR(150)")
+	@Column(name = "thumbnail", columnDefinition = "TEXT")
 	private String thumbnail;
-	
-	@Column(name = "base_price", columnDefinition = "DECIMAL")
-	private Double basePrice;
 	
 	@Column(name = "price", columnDefinition = "DECIMAL")
 	private Double price;
 	
-	@Column(name = "discont", columnDefinition = "DECIMAL")
+	@Column(name = "discount", columnDefinition = "DECIMAL")
 	private Double discount;
 	
-	@Column(name = "screen", columnDefinition = "VARCHAR(255)")
-	private String screen;
-	
-	@Column(name = "rear_camera", columnDefinition = "VARCHAR(255)")
-	private String rearCamera;
-	
-	@Column(name = "front_camera", columnDefinition = "VARCHAR(255)")
-	private String frontCamera;
-	
-	@Column(name = "cpu", columnDefinition = "VARCHAR(255)")
-	private String cpu;
-	
-	@Column(name = "gpu", columnDefinition = "VARCHAR(255)")
-	private String gpu;
-	
-	@Column(name = "weight", columnDefinition = "INT")
-	private int weight;
-	
-	@Column(name = "operating_system", columnDefinition = "VARCHAR(150)")
-	private String operatingSystem;
-
 	@Column(name = "description", columnDefinition = "TEXT")
 	private String description;
 	
@@ -88,6 +65,9 @@ public class ProductEntity {
 	@ManyToOne
 	@JoinColumn(name = "supplier_id")
 	private SupplierEntity supplierEntityInProduct;
+
+	@OneToOne(mappedBy = "productEntityInInfo")
+	private ProductInfoEntity productInfoEntityInProduct;
 
 	public Long getId() {
 		return id;
@@ -121,14 +101,6 @@ public class ProductEntity {
 		this.thumbnail = thumbnail;
 	}
 
-	public Double getBasePrice() {
-		return basePrice;
-	}
-
-	public void setBasePrice(Double basePrice) {
-		this.basePrice = basePrice;
-	}
-
 	public Double getPrice() {
 		return price;
 	}
@@ -143,54 +115,6 @@ public class ProductEntity {
 
 	public void setDiscount(Double discount) {
 		this.discount = discount;
-	}
-
-	public String getScreen() {
-		return screen;
-	}
-
-	public void setScreen(String screen) {
-		this.screen = screen;
-	}
-
-	public String getRearCamera() {
-		return rearCamera;
-	}
-
-	public void setRearCamera(String rearCamera) {
-		this.rearCamera = rearCamera;
-	}
-
-	public String getFrontCamera() {
-		return frontCamera;
-	}
-
-	public void setFrontCamera(String frontCamera) {
-		this.frontCamera = frontCamera;
-	}
-
-	public String getCpu() {
-		return cpu;
-	}
-
-	public void setCpu(String cpu) {
-		this.cpu = cpu;
-	}
-
-	public int getWeight() {
-		return weight;
-	}
-
-	public void setWeight(int weight) {
-		this.weight = weight;
-	}
-	
-	public String getOperatingSystem() {
-		return operatingSystem;
-	}
-
-	public void setOperatingSystem(String operatingSystem) {
-		this.operatingSystem = operatingSystem;
 	}
 
 	public String getDescription() {
@@ -263,6 +187,14 @@ public class ProductEntity {
 
 	public void setSupplierEntityInProduct(SupplierEntity supplierEntityInProduct) {
 		this.supplierEntityInProduct = supplierEntityInProduct;
+	}
+
+	public ProductInfoEntity getProductInfoEntityInProduct() {
+		return productInfoEntityInProduct;
+	}
+
+	public void setProductInfoEntityInProduct(ProductInfoEntity productInfoEntityInProduct) {
+		this.productInfoEntityInProduct = productInfoEntityInProduct;
 	}
 	
 }

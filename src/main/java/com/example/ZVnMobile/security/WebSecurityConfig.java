@@ -35,12 +35,15 @@ public class WebSecurityConfig {
         http.addFilterBefore(customFilterJwt, UsernamePasswordAuthenticationFilter.class);
         http.authorizeHttpRequests(requests -> requests
                                 .requestMatchers(
-                                		"/user/**",
-                                		"/category/**").permitAll()
+                                		"/api/user/**",
+                                		"/api/category/**",
+                                		"/api/supplier/**",
+                                		"/api/product/**",
+                                		"/api/review/**").permitAll()
                                 .requestMatchers(
-                                		"/admin/**").hasRole("ADMIN")
+                                		"/api/admin/**").hasRole("QUANLI")
                                 .requestMatchers(
-                                		"/customer/**").hasRole("CUSTOMER")
+                                		"/api/customer/**").hasRole("KHACHHANG")
                                 .anyRequest().authenticated());
 		return http.build();
 	}

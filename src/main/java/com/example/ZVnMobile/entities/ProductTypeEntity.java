@@ -20,17 +20,11 @@ public class ProductTypeEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(columnDefinition = "VARCHAR(100)")
-	private String color;
-	
-	@Column(columnDefinition = "VARCHAR(255)")
-	private String version;
+	@Column(columnDefinition = "INT")
+	private Integer ram;
 	
 	@Column(columnDefinition = "INT")
-	private int soldQuantity;
-	
-	@Column(columnDefinition = "INT")
-	private int inventoryQuantity;
+	private Integer room;
 	
 	@Column(columnDefinition = "DECIMAL")
 	private Double basePrice;
@@ -41,12 +35,13 @@ public class ProductTypeEntity {
 	@Column(columnDefinition = "DECIMAL")
 	private Double discount;
 	
-	@OneToMany(mappedBy = "productTypeEntityInItem")
-	private List<OrderItemEntity> listOrderItemEntities;
-	
+//	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "product_id")
 	private ProductEntity productEntityInType;
+
+	@OneToMany(mappedBy = "productTypeEntityInColor")
+	private List<ProductColorEntity> listTypeColorEntities;
 
 	public Long getId() {
 		return id;
@@ -56,36 +51,20 @@ public class ProductTypeEntity {
 		this.id = id;
 	}
 
-	public String getColor() {
-		return color;
+	public Integer getRam() {
+		return ram;
 	}
 
-	public void setColor(String color) {
-		this.color = color;
+	public void setRam(Integer ram) {
+		this.ram = ram;
 	}
 
-	public String getVersion() {
-		return version;
+	public Integer getRoom() {
+		return room;
 	}
 
-	public void setVersion(String version) {
-		this.version = version;
-	}
-
-	public int getSoldQuantity() {
-		return soldQuantity;
-	}
-
-	public void setSoldQuantity(int soldQuantity) {
-		this.soldQuantity = soldQuantity;
-	}
-
-	public int getInventoryQuantity() {
-		return inventoryQuantity;
-	}
-
-	public void setInventoryQuantity(int inventoryQuantity) {
-		this.inventoryQuantity = inventoryQuantity;
+	public void setRoom(Integer room) {
+		this.room = room;
 	}
 
 	public Double getBasePrice() {
@@ -112,14 +91,6 @@ public class ProductTypeEntity {
 		this.discount = discount;
 	}
 
-	public List<OrderItemEntity> getListOrderItemEntities() {
-		return listOrderItemEntities;
-	}
-
-	public void setListOrderItemEntities(List<OrderItemEntity> listOrderItemEntities) {
-		this.listOrderItemEntities = listOrderItemEntities;
-	}
-
 	public ProductEntity getProductEntityInType() {
 		return productEntityInType;
 	}
@@ -127,7 +98,13 @@ public class ProductTypeEntity {
 	public void setProductEntityInType(ProductEntity productEntityInType) {
 		this.productEntityInType = productEntityInType;
 	}
-	
-	
-	
+
+	public List<ProductColorEntity> getListTypeColorEntities() {
+		return listTypeColorEntities;
+	}
+
+	public void setListTypeColorEntities(List<ProductColorEntity> listTypeColorEntities) {
+		this.listTypeColorEntities = listTypeColorEntities;
+	}
+
 }

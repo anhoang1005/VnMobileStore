@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.ZVnMobile.convert.UsersConverter;
+import com.example.ZVnMobile.dto.UserInfoDto;
 import com.example.ZVnMobile.dto.UsersDto;
 import com.example.ZVnMobile.entities.UsersEntity;
 import com.example.ZVnMobile.payload.DataResponse;
@@ -145,12 +146,14 @@ public class UsersService implements IUsersService{
 				String hashPassword = passwordEncoder.encode(newPassword);
 				usersEntity.setPassword(hashPassword);
 				usersEntity.setVerifyCode(null);
+				usersEntity.setUpdatedAt(new Date());
+				usersEntity = userRepository.save(usersEntity);
 				
 				dataResponse.setSuccess(true);
 				dataResponse.setMessage("Doi mat khau thanh cong!");
 			}
 			else {
-				dataResponse.setSuccess(true);
+				dataResponse.setSuccess(false);
 				dataResponse.setMessage("Verify code khong dung!");
 			}
 		} catch (Exception e) {
@@ -159,6 +162,45 @@ public class UsersService implements IUsersService{
 		}
 		return dataResponse;
 	}
+
+	@Override
+	public DataResponse getUserInfoByEmail(String email) {
+		DataResponse dataResponse = new DataResponse();
+		try {
+			UsersEntity usersEntity = userRepository.findByEmail(email);
+			UserInfoDto userInfoDto = usersConverter.userInfoEntityToUserInfoDto(usersEntity);
+		
+			dataResponse.setData(userInfoDto);
+			dataResponse.setSuccess(true);
+		} catch (Exception e) {
+			dataResponse.setMessage("Loi: " + e.getMessage());;
+			dataResponse.setSuccess(false);
+		}
+		return dataResponse;
+	}
+
+	@Override
+	public DataResponse checkExistUser(String email) {
+		DataResponse dataResponse = new DataResponse();
+		try {
+			UsersEntity usersEntity = userRepository.findByEmail(email);
+			if(usersEntity==null) {
+				dataResponse.setSuccess(true);
+				dataResponse.setData("Khong ton tai!");
+			}
+			else {
+				dataResponse.setSuccess(false);
+				dataResponse.setData("Da ton tai!");
+			}
+		} catch (Exception e) {
+			dataResponse.setSuccess(false);
+			dataResponse.setMessage("Loi: " + e.getMessage());
+			dataResponse.setData("Da xay ra loi!");
+		}
+		return dataResponse;
+	}
+	
+	
 	
 	
 }

@@ -5,6 +5,7 @@ import com.example.ZVnMobile.payload.DataResponse;
 
 public interface ILoginService {
 	DataResponse loginUser(String username, String password);
+	DataResponse signinUser(String username, String password);
 	DataResponse signupUser(SignupDto signupDto);
 	DataResponse verifyUsers(String verify, String email);
 }

@@ -5,6 +5,8 @@ import com.example.ZVnMobile.payload.request.EditProfileRequest;
 
 public interface IUsersService {
 	DataResponse getAllUsers();
+	DataResponse getUserInfoByEmail(String email);
+	DataResponse checkExistUser(String email);
 	DataResponse editProfile(EditProfileRequest editProfileRequest);
 	DataResponse changePassword(String email, String password, String newPassword);
 	DataResponse forgotPassword(String email);

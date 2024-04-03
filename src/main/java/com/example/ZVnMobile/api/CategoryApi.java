@@ -13,7 +13,7 @@ import com.example.ZVnMobile.service.impl.ICategoryService;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/api/category")
 public class CategoryApi {
 	
 	@Autowired

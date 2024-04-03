@@ -11,7 +11,7 @@ public class UsersHelperUtils {
 		StringBuilder password = new StringBuilder();
 		SecureRandom random = new SecureRandom();
 		
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < 6; i++) {
             int randomIndex = random.nextInt(character.length());
             password.append(character.charAt(randomIndex));
         }
@@ -19,11 +19,11 @@ public class UsersHelperUtils {
 	}
 	
 	public String verifyCode() {
-		String character = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		String character = "0123456789";
 		StringBuilder password = new StringBuilder();
 		SecureRandom random = new SecureRandom();
 		
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 6; i++) {
             int randomIndex = random.nextInt(character.length());
             password.append(character.charAt(randomIndex));
         }

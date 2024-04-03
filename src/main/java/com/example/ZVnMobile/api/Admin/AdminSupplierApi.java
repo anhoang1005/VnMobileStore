@@ -13,7 +13,7 @@ import com.example.ZVnMobile.service.impl.ISupplierService;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/admin/supplier")
+@RequestMapping("/api/admin/supplier")
 public class AdminSupplierApi {
 	
 	@Autowired

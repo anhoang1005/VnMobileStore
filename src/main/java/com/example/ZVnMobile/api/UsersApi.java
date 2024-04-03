@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +18,7 @@ import com.example.ZVnMobile.service.impl.IUsersService;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/user")
+@RequestMapping("api/user")
 public class UsersApi {
 	
 	@Autowired
@@ -26,13 +27,15 @@ public class UsersApi {
 	@Autowired
 	private IUsersService iUsersService;
 	
-	@GetMapping("/test")
-	public String test() {
-		return "test";
+	@PostMapping("/login")
+	public ResponseEntity<?> loginUser(
+			@RequestParam("username")String username,
+			@RequestParam("password")String password){
+		return new ResponseEntity<>(iLoginService.signinUser(username, password), HttpStatus.OK);
 	}
 	
 	@PostMapping("/signin")
-	public ResponseEntity<?> loginUser(
+	public ResponseEntity<?> signinUser(
 			@RequestParam("username")String username,
 			@RequestParam("password")String password){
 		return new ResponseEntity<>(iLoginService.loginUser(username, password), HttpStatus.OK);
@@ -43,10 +46,10 @@ public class UsersApi {
 		return new ResponseEntity<>(iLoginService.signupUser(signupDto), HttpStatus.OK);
 	}
 	
-	@GetMapping("/verify")
+	@GetMapping("/verify/{email}/{code}")
 	public ResponseEntity<?> verifyUsers(
-			@RequestParam("code") String verifyCode,
-			@RequestParam("email") String email){
+			@PathVariable("code") String verifyCode,
+			@PathVariable("email") String email){
 		return new ResponseEntity<>(iLoginService.verifyUsers(verifyCode, email), HttpStatus.OK);
 	}
 	
@@ -62,4 +65,10 @@ public class UsersApi {
 			@RequestParam("newPassword")String newPasswod){
 		return new ResponseEntity<>(iUsersService.verifyForgotPassword(email, verifyCode, newPasswod), HttpStatus.OK);
 	}
+	
+	@GetMapping("/checkExist/{email}")
+	public ResponseEntity<?> checkExistUser(@PathVariable("email")String email){
+		return new ResponseEntity<>(iUsersService.checkExistUser(email), HttpStatus.OK);
+	}
+	
 }

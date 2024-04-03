@@ -17,8 +17,8 @@ public class OrderItemEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(columnDefinition = "TEXT")
-	private String type;
+	@Column(columnDefinition = "VARCHAR(255)")
+	private String color;
 	
 	@Column(columnDefinition = "DECIMAL")
 	private Double price;
@@ -34,8 +34,8 @@ public class OrderItemEntity {
 	private OrderEntity orderEntityByItem;
 	
 	@ManyToOne
-	@JoinColumn(name = "productType_id")
-	private ProductTypeEntity productTypeEntityInItem;
+	@JoinColumn(name = "productColor_id")
+	private ProductColorEntity productColorEntityInItem;
 
 	public Long getId() {
 		return id;
@@ -45,12 +45,12 @@ public class OrderItemEntity {
 		this.id = id;
 	}
 
-	public String getType() {
-		return type;
+	public String getColor() {
+		return color;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setColor(String color) {
+		this.color = color;
 	}
 
 	public Double getPrice() {
@@ -85,12 +85,11 @@ public class OrderItemEntity {
 		this.orderEntityByItem = orderEntityByItem;
 	}
 
-	public ProductTypeEntity getProductTypeEntityInItem() {
-		return productTypeEntityInItem;
+	public ProductColorEntity getProductColorEntityInItem() {
+		return productColorEntityInItem;
 	}
 
-	public void setProductTypeEntityInItem(ProductTypeEntity productTypeEntityInItem) {
-		this.productTypeEntityInItem = productTypeEntityInItem;
+	public void setProductColorEntityInItem(ProductColorEntity productColorEntityInItem) {
+		this.productColorEntityInItem = productColorEntityInItem;
 	}
-	
 }

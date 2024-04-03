@@ -12,7 +12,7 @@ import com.example.ZVnMobile.service.impl.IUsersService;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/admin/user")
+@RequestMapping("/api/admin/user")
 public class AdminUsersApi {
 	
 	@Autowired

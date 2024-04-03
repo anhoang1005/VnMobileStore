@@ -10,14 +10,14 @@ import com.example.ZVnMobile.convert.SupplierConverter;
 import com.example.ZVnMobile.dto.SupplierDto;
 import com.example.ZVnMobile.entities.SupplierEntity;
 import com.example.ZVnMobile.payload.DataResponse;
-import com.example.ZVnMobile.repository.SupplerRepository;
+import com.example.ZVnMobile.repository.SupplierRepository;
 import com.example.ZVnMobile.service.impl.ISupplierService;
 
 @Service
 public class SupplierService implements ISupplierService{
 	
 	@Autowired
-	private SupplerRepository supplerRepository;
+	private SupplierRepository supplerRepository;
 	
 	@Autowired
 	private SupplierConverter supplierConverter;

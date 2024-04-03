@@ -1,5 +1,6 @@
 package com.example.ZVnMobile.utils;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.crypto.SecretKey;
@@ -19,9 +20,11 @@ public class JwtUtils {
 	private String secretKeyString;
 	
 	public String generateTokens(String username, List<String> roles) {
+		Date expirationDate = new Date(System.currentTimeMillis() + 7 * 24 * 3600 * 1000);
 		SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKeyString));
 		String jws = Jwts.builder()
 				.subject(username)
+				.expiration(expirationDate)
 				.claim("roles", roles)
 				.signWith(key)
 				.compact();
@@ -29,13 +32,16 @@ public class JwtUtils {
 	}
 	
 	public boolean verifyToken(String token) {
+		boolean isVerify = false;
 		try {
 			SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKeyString));
 			Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
-			return true;
+			isVerify = true;
 		} catch (Exception e) {
-			return false;
+			isVerify = false;
 		}
+		System.out.println("Verify: " + isVerify);
+		return isVerify;
 	}
 	
 	@SuppressWarnings("unchecked")

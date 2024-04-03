@@ -1,5 +1,7 @@
 package com.example.ZVnMobile.entities;
 
+import java.util.Date;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,6 +24,15 @@ public class ProductReviewEntity {
 	
 	@Column(columnDefinition = "TEXT")
 	private String comment;
+	
+	@Column(columnDefinition = "INT")
+	private Integer likeCount;
+	
+	@Column(columnDefinition = "TIMESTAMP")
+	private Date createdAt;
+	
+	@Column(columnDefinition = "TIMESTAMP")
+	private Date updateAt;
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
@@ -70,6 +81,28 @@ public class ProductReviewEntity {
 	public void setProductEntityInReview(ProductEntity productEntityInReview) {
 		this.productEntityInReview = productEntityInReview;
 	}
-	
-	
+
+	public Integer getLike() {
+		return likeCount;
+	}
+
+	public void setLike(Integer like) {
+		this.likeCount = like;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Date getUpdateAt() {
+		return updateAt;
+	}
+
+	public void setUpdateAt(Date updateAt) {
+		this.updateAt = updateAt;
+	}
 }

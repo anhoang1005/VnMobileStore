@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.example.ZVnMobile.entities.SupplierEntity;
 
 @Repository
-public interface SupplerRepository extends JpaRepository<SupplierEntity, Long>{
+public interface SupplierRepository extends JpaRepository<SupplierEntity, Long>{
 	SupplierEntity findOneById(Long id);
 }

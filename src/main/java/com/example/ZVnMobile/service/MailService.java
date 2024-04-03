@@ -46,10 +46,10 @@ public class MailService implements IMailService{
 		String toAddress = toAdress;
 	    String fromAddress = fromEmail;
 	    String senderName = "VnMobile";
-	    String subject = "Xác nhận tài khoản người dùng VnMobile";
+	    String subject = "Mã xác nhận tài khoản người dùng VnMobile";
 	    String content = "Xin chào [[name]],<br>"
-	            + "Vui lòng click vào link xác nhận bên dưới để kích hoạt tài khoản người dùng VndMobile của bạn:<br>"
-	            + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3><br>"
+	            + "Đây là mã xác nhận để kích hoạt tài khoản người dùng VnMobile của bạn, vui lòng không để lộ ra ngoài!:<br>"
+	            + "<h4>Mã xác nhận: [[verifyCode]]</h4><br>"
 	            + "Cảm ơn bạn,<br>"
 	            + "[[Company]]";
 	    
@@ -61,8 +61,7 @@ public class MailService implements IMailService{
 		    helper.setTo(toAddress);
 		    helper.setSubject(subject);
 		    content = content.replace("[[name]]", toAddress);
-		    String verifyURL = serverURL + "/user/verify?email=" + toAddress + "&code=" + verifyCode;
-		    content = content.replace("[[URL]]", verifyURL);
+		    content = content.replace("[[verifyCode]]", verifyCode);
 		    content = content.replace("[[Company]]", senderName);
 		    helper.setText(content, true);
 		    javaMailSender.send(message);
@@ -79,11 +78,11 @@ public class MailService implements IMailService{
 		boolean isSucess = false;
 		String toAddress = email;
 	    String fromAddress = fromEmail;
-	    String senderName = "H2Mobile";
-	    String subject = "Mã xác nhận đổi mặt khẩu tài khoản VnMobilr";
+	    String senderName = "VNMobile";
+	    String subject = "Mã xác nhận đổi mặt khẩu tài khoản VnMobile";
 	    String content = "Xin chào [[name]],<br>"
 	            + "Đây là mã đổi mật khẩu tạm thời của bạn, vui lòng không để lộ ra ngoài!<br>"
-	            + "<h4>Mật khẩu: [[Password]]</h4><br>"
+	            + "<h4>Mã xác nhận: [[Password]]</h4><br>"
 	            + "Cảm ơn bạn,<br>"
 	            + "[[Company]]";
 	    
