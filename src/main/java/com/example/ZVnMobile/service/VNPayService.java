@@ -30,15 +30,10 @@ public class VNPayService {
 		DataResponse dataResponse = new DataResponse();
 		String vnp_Version = "2.1.0";
 		String vnp_Command = "pay";
-//      String orderType = "orther";
 		orderType = "other";
 		
 		// Price don hang
 		long amount = total * 100;
-
-//		Bank name
-//        String bankCode = "MBBank";
-//		bankCode = "NCB";
 
 		// language
 		String locate = "vn";
