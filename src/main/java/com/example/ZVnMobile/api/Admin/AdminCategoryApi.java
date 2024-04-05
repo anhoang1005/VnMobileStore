@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ZVnMobile.dto.CategoryDto;
@@ -28,5 +29,12 @@ public class AdminCategoryApi {
 	@PostMapping("/update")
 	public ResponseEntity<?> updateCategory(@RequestBody CategoryDto categoryDto){
 		return new ResponseEntity<>(iCategoryService.updateCategory(categoryDto), HttpStatus.OK);
+	}
+	
+	@PostMapping("/status")
+	public ResponseEntity<?> statusCategory(
+			@RequestParam("id") Long id,
+			@RequestParam("deleted") boolean status ){
+		return new ResponseEntity<>(iCategoryService.lockOrUnlockCategory(id, status), HttpStatus.OK);
 	}
 }

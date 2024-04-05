@@ -123,5 +123,25 @@ public class CategoryService implements ICategoryService{
 		}
 		return dataResponse;
 	}
+
+	@Override
+	public DataResponse lockOrUnlockCategory(Long id, boolean status) {
+		DataResponse dataResponse = new DataResponse();
+		try {
+			CategoryEntity categoryEntity = categoryRepositry.findOneById(id);
+			categoryEntity.setDeleted(status);
+			categoryEntity = categoryRepositry.save(categoryEntity);
+			if(categoryEntity!=null) {
+				dataResponse.setData("OK");
+				dataResponse.setSuccess(true);
+			}
+		} catch (Exception e) {
+			dataResponse.setData("Error");
+			dataResponse.setSuccess(false);
+			dataResponse.setMessage("Error: " + e.getMessage());
+		}
+		
+		return dataResponse;
+	}
 	
 }

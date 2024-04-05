@@ -9,4 +9,5 @@ public interface ICategoryService {
 	DataResponse getCategoryById(Long id);
 	DataResponse insertCategory(CategoryDto categoryDto);
 	DataResponse updateCategory(CategoryDto categoryDto);
+	DataResponse lockOrUnlockCategory(Long id, boolean status);
 }
