@@ -39,7 +39,8 @@ public class WebSecurityConfig {
                                 		"/api/category/**",
                                 		"/api/supplier/**",
                                 		"/api/product/**",
-                                		"/api/review/**").permitAll()
+                                		"/api/review/**",
+                                		"/api/ghn/**").permitAll()
                                 .requestMatchers(
                                 		"/api/admin/**").hasRole("QUANLI")
                                 .requestMatchers(
@@ -50,8 +51,8 @@ public class WebSecurityConfig {
 	
 	@Bean
 	UserDetailsService userDetailsService() throws Exception{
-		UserDetails admin = User.withUsername("test")
-				.password(passwordEncoder().encode("0000"))
+		UserDetails admin = User.withUsername("vananhoang10052002@gmail.com")
+				.password(passwordEncoder().encode("test0000"))
 				.roles("TEST").build();
 		return new InMemoryUserDetailsManager(admin);
 	}
