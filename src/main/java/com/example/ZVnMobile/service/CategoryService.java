@@ -45,14 +45,50 @@ public class CategoryService implements ICategoryService{
 
 	@Override
 	public DataResponse insertCategory(CategoryDto categoryDto) {
-		// TODO Auto-generated method stub
-		return null;
+		DataResponse dataResponse = new DataResponse();
+		try {
+			CategoryEntity categoryEntity = new CategoryEntity();
+			categoryEntity.setCategoryName(categoryDto.getCategoryName());
+			categoryEntity.setImages(categoryDto.getImages());
+			categoryEntity.setDescription(categoryDto.getDesciption());
+			categoryEntity.setDeleted(true);
+			
+			categoryEntity = categoryRepositry.save(categoryEntity);
+			if(categoryEntity!=null) {
+				dataResponse.setData("OK");
+				dataResponse.setSuccess(true);
+				dataResponse.setMessage("Them thanh cong");
+			}
+		} catch (Exception e) {
+			dataResponse.setData("Loi");
+			dataResponse.setSuccess(false);
+			dataResponse.setMessage("Error: " + e.getMessage());
+		}
+		return dataResponse;
 	}
 
 	@Override
 	public DataResponse updateCategory(CategoryDto categoryDto) {
-		// TODO Auto-generated method stub
-		return null;
+		DataResponse dataResponse = new DataResponse();
+		try {
+			CategoryEntity categoryEntity = categoryRepositry.findOneById(categoryDto.getId());
+			categoryEntity.setCategoryName(categoryDto.getCategoryName());
+			categoryEntity.setImages(categoryDto.getImages());
+			categoryEntity.setDescription(categoryDto.getDesciption());
+			//categoryEntity.setDeleted(categoryDto.isDeleted());
+			
+			categoryEntity = categoryRepositry.save(categoryEntity);
+			if(categoryEntity!=null) {
+				dataResponse.setData("OK");
+				dataResponse.setMessage("Update thanh cong");
+				dataResponse.setSuccess(true);
+			}
+		} catch (Exception e) {
+			dataResponse.setData("Error");
+			dataResponse.setMessage("Error: " + e.getMessage());
+			dataResponse.setSuccess(false);
+		}
+		return dataResponse;
 	}
 
 	@Override

@@ -4,7 +4,16 @@ public class CategoryDto {
 
 	private Long id;
 	private String categoryName;
+	private String images;
 	private String desciption;
+	private boolean deleted;
+	
+	public boolean isDeleted() {
+		return deleted;
+	}
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
 	public Long getId() {
 		return id;
 	}
@@ -16,6 +25,13 @@ public class CategoryDto {
 	}
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
+	}
+	
+	public String getImages() {
+		return images;
+	}
+	public void setImages(String images) {
+		this.images = images;
 	}
 	public String getDesciption() {
 		return desciption;

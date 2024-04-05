@@ -22,7 +22,13 @@ public class CategoryEntity {
 	private String categoryName;
 	
 	@Column(columnDefinition = "TEXT")
+	private String images;
+	
+	@Column(columnDefinition = "TEXT")
 	private String description;
+	
+	@Column(columnDefinition = "BIT")
+	private boolean deleted;
 	
 	@OneToMany(mappedBy = "categoryEntityInProduct")
 	private List<ProductEntity> listProductEntities;
@@ -43,12 +49,28 @@ public class CategoryEntity {
 		this.categoryName = categoryName;
 	}
 
+	public String getImages() {
+		return images;
+	}
+
+	public void setImages(String images) {
+		this.images = images;
+	}
+
 	public String getDescription() {
 		return description;
 	}
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	public List<ProductEntity> getListProductEntities() {

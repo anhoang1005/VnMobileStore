@@ -11,7 +11,9 @@ public class CategoryConverter {
 		CategoryDto categoryDto = new CategoryDto();
 		categoryDto.setId(categoryEntity.getId());
 		categoryDto.setCategoryName(categoryEntity.getCategoryName());
+		categoryDto.setImages(categoryEntity.getImages());
 		categoryDto.setDesciption(categoryEntity.getDescription());
+		categoryDto.setDeleted(categoryEntity.isDeleted());
 		return categoryDto;
 	}
 }
