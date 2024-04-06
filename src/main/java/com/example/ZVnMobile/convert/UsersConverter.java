@@ -13,6 +13,7 @@ public class UsersConverter {
 	
 	public UsersDto entityToDto(UsersEntity entity) {
 		UsersDto dto = new UsersDto();
+		dto.setId(entity.getId());
 		dto.setAvatar(entity.getAvatar());
 		dto.setFullName(entity.getFullName());
 		dto.setPhoneNumber(entity.getPhoneNumber());
