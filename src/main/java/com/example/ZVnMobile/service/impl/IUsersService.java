@@ -11,4 +11,7 @@ public interface IUsersService {
 	DataResponse changePassword(String email, String password, String newPassword);
 	DataResponse forgotPassword(String email);
 	DataResponse verifyForgotPassword(String email,String verifyCode, String newPassword);
+	
+	DataResponse lockOrUnlockUser(Long id, boolean lock);
+	DataResponse adminUpdateRoleUser(Long id, String role);
 }

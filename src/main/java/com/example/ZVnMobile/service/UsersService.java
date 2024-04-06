@@ -199,6 +199,44 @@ public class UsersService implements IUsersService{
 		}
 		return dataResponse;
 	}
+
+	@Override
+	public DataResponse lockOrUnlockUser(Long id, boolean lock) {
+		DataResponse dataResponse = new DataResponse();
+		try {
+			UsersEntity usersEntity = userRepository.findOneById(id);
+			usersEntity.setDeleted(lock);
+			usersEntity = userRepository.save(usersEntity);
+			if(usersEntity!=null) {
+				dataResponse.setData("OK");
+				dataResponse.setSuccess(true);
+			}
+		} catch (Exception e) {
+			dataResponse.setData("Error");
+			dataResponse.setMessage("Error: " + e.getMessage());
+			dataResponse.setSuccess(false);
+		}
+		return dataResponse;
+	}
+
+	@Override
+	public DataResponse adminUpdateRoleUser(Long id, String role) {
+		DataResponse dataResponse = new DataResponse();
+		try {
+			UsersEntity usersEntity = userRepository.findOneById(id);
+			usersEntity.setRole(role);
+			usersEntity = userRepository.save(usersEntity);
+			if(usersEntity!=null){
+				dataResponse.setData("OK");
+				dataResponse.setSuccess(true);
+			}
+		} catch (Exception e) {
+			dataResponse.setData("Error");
+			dataResponse.setMessage("Error: " + e.getMessage());
+			dataResponse.setSuccess(false);
+		}
+		return dataResponse;
+	}
 	
 	
 	
