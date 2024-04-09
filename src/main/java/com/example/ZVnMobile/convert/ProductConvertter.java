@@ -45,7 +45,15 @@ public class ProductConvertter {
 		dto.setDiscount(entity.getDiscount());
 		dto.setProductSlug(entity.getProductSlug());
 		
-		dto.setRatingStar(4.66);
+		Integer sumRateStar = 0;
+		for(ProductReviewEntity reviewEntity : entity.getListProductReviewEntities()) {
+			sumRateStar += reviewEntity.getRatingStar();
+		}
+		Double ratingStar = 1.0*sumRateStar/entity.getListProductReviewEntities().size();
+		if(entity.getListProductReviewEntities().size()==0) {
+			ratingStar = 5.0;
+		}
+		dto.setRatingStar(ratingStar);
 		
 		//ProductInfoDto productInfoDto = productInfoConverter.entityToProductInfoDto(entity.getProductInfoEntityInProduct());
 		dto.setProductInfo(entity.getProductInfoEntityInProduct());

@@ -9,11 +9,20 @@ public class ProductReviewDto {
 	private Long productId;
 	private String username;
 	private String fullName;
+	private String avatar;
 	private int rateStar;
 	private String comment;
 	private Integer like;
 	private String createdAt;
 	private Date updatedAt;
+	
+	
+	public String getAvatar() {
+		return avatar;
+	}
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
 	public Long getReviewId() {
 		return ReviewId;
 	}

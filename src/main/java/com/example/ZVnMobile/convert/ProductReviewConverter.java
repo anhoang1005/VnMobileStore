@@ -16,6 +16,7 @@ public class ProductReviewConverter {
 		dto.setReviewId(entity.getId());
 		dto.setUserId(entity.getUsersEntityInReview().getId());
 		dto.setFullName(entity.getUsersEntityInReview().getFullName());
+		dto.setAvatar(entity.getUsersEntityInReview().getAvatar());
 		dto.setProductId(entity.getProductEntityInReview().getId());
 		dto.setRateStar(entity.getRatingStar());
 		dto.setComment(entity.getComment());
