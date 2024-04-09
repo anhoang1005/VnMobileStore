@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.ZVnMobile.convert.CategoryConverter;
@@ -141,6 +144,28 @@ public class CategoryService implements ICategoryService{
 			dataResponse.setMessage("Error: " + e.getMessage());
 		}
 		
+		return dataResponse;
+	}
+
+	@Override
+	public DataResponse getPageCategory(int pageNumber) {
+		DataResponse dataResponse = new DataResponse();
+		try {
+			Pageable pageable = PageRequest.of(pageNumber - 1, 3);
+			Page<CategoryEntity> listEntity = categoryRepositry.findAll(pageable);
+			List<CategoryDto> listDto = new ArrayList<>();
+			for(CategoryEntity categoryEntity : listEntity) {
+				CategoryDto categoryDto = new CategoryDto();
+				categoryDto = categoryConverter.entityToDto(categoryEntity);
+				listDto.add(categoryDto);
+			}
+			dataResponse.setData(listDto);
+			dataResponse.setSuccess(true);
+		} catch (Exception e) {
+			dataResponse.setData("Error");
+			dataResponse.setMessage("Error: " + e.getMessage());
+			dataResponse.setSuccess(true);
+		}
 		return dataResponse;
 	}
 	

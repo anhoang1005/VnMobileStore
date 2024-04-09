@@ -5,6 +5,7 @@ import com.example.ZVnMobile.payload.DataResponse;
 
 public interface ICategoryService {
 	DataResponse getAllCategory();
+	DataResponse getPageCategory(int pageNumber);
 	DataResponse getCategoryByName(String categoryName);
 	DataResponse getCategoryById(Long id);
 	DataResponse insertCategory(CategoryDto categoryDto);

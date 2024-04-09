@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +22,11 @@ public class AdminCategoryApi {
 	
 	@Autowired
 	private ICategoryService iCategoryService;
+	
+	@GetMapping("/getbypage/{pageNumber}")
+	public ResponseEntity<?> getPAgeCategory(@PathVariable("pageNumber")int pageNumber){
+		return new ResponseEntity<>(iCategoryService.getPageCategory(pageNumber), HttpStatus.OK);
+	}
 	
 	@PostMapping("/insert")
 	public ResponseEntity<?> insertCategory(@RequestBody CategoryDto categoryDto){
