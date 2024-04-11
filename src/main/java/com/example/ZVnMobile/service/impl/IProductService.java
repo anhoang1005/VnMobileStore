@@ -12,4 +12,5 @@ public interface IProductService {
 	DataResponse updateProduct(ProductDto productDto);
 	DataResponse deleteProduct(Long id);
 	DataResponse getProductDetail(String productSlug);
+	DataResponse getProductBySupplier(Long id, int pageNumber);
 }

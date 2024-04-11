@@ -1,6 +1,7 @@
 package com.example.ZVnMobile.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,11 @@ import com.example.ZVnMobile.repository.SupplierRepository;
 import com.example.ZVnMobile.service.impl.ISupplierService;
 
 @Service
-public class SupplierService implements ISupplierService{
-	
+public class SupplierService implements ISupplierService {
+
 	@Autowired
 	private SupplierRepository supplerRepository;
-	
+
 	@Autowired
 	private SupplierConverter supplierConverter;
 
@@ -27,8 +28,8 @@ public class SupplierService implements ISupplierService{
 		DataResponse dataResponse = new DataResponse();
 		try {
 			List<SupplierEntity> listEntities = supplerRepository.findAll();
-			List<SupplierDto> listDtos  = new ArrayList<>();
-			for(SupplierEntity entity: listEntities) {
+			List<SupplierDto> listDtos = new ArrayList<>();
+			for (SupplierEntity entity : listEntities) {
 				SupplierDto dto = new SupplierDto();
 				dto = supplierConverter.entityToDto(entity);
 				listDtos.add(dto);
@@ -39,7 +40,7 @@ public class SupplierService implements ISupplierService{
 			dataResponse.setSuccess(false);
 			dataResponse.setMessage("Loi: " + e.getMessage());
 		}
-		
+
 		return dataResponse;
 	}
 
@@ -49,7 +50,7 @@ public class SupplierService implements ISupplierService{
 		try {
 			SupplierEntity entity = supplerRepository.findOneById(id);
 			SupplierDto dto = supplierConverter.entityToDto(entity);
-			
+
 			dataResponse.setData(dto);
 			dataResponse.setSuccess(true);
 		} catch (Exception e) {
@@ -69,9 +70,11 @@ public class SupplierService implements ISupplierService{
 			supplierEntity.setEmail(supplierDto.getEmail());
 			supplierEntity.setAdress(supplierDto.getAdress());
 			supplierEntity.setDescription(supplierDto.getDescription());
+			supplierEntity.setCreatedAt(new Date());
+			supplierEntity.setDeleted(true);
 			supplierEntity = supplerRepository.save(supplierEntity);
-			
-			if(supplierEntity!=null) {
+
+			if (supplierEntity != null) {
 				dataResponse.setData(supplierConverter.entityToDto(supplierEntity));
 				dataResponse.setSuccess(true);
 			}
@@ -85,14 +88,46 @@ public class SupplierService implements ISupplierService{
 
 	@Override
 	public DataResponse updateSupplier(SupplierDto supplierDto) {
-		// TODO Auto-generated method stub
-		return null;
+		DataResponse dataResponse = new DataResponse();
+		try {
+			SupplierEntity supplierEntity = supplerRepository.findOneById(supplierDto.getId());
+			if (supplierEntity != null) {
+				supplierEntity.setSupplierName(supplierDto.getSupplierName());
+				supplierEntity.setPhoneNumber(supplierDto.getPhoneNumber());
+				supplierEntity.setEmail(supplierDto.getEmail());
+				supplierEntity.setAdress(supplierDto.getAdress());
+				supplierEntity.setDescription(supplierDto.getDescription());
+				supplierEntity = supplerRepository.save(supplierEntity);
+			}
+			if (supplierEntity != null) {
+				dataResponse.setData(supplierConverter.entityToDto(supplierEntity));
+				dataResponse.setSuccess(true);
+			}
+		} catch (Exception e) {
+			dataResponse.setMessage("Error: " + e.getMessage());
+			dataResponse.setData("Error");
+			dataResponse.setSuccess(false);
+		}
+		return dataResponse;
 	}
 
 	@Override
 	public DataResponse lockOrUnlockSupplier(Long id, boolean status) {
-		// TODO Auto-generated method stub
-		return null;
+		DataResponse dataResponse = new DataResponse();
+		try {
+			SupplierEntity supplierEntity = supplerRepository.findOneById(id);
+			if(supplierEntity!=null) {
+				supplierEntity.setDeleted(status);
+				supplierEntity = supplerRepository.save(supplierEntity);
+				dataResponse.setData(supplierConverter.entityToDto(supplierEntity));
+				dataResponse.setSuccess(true);
+			}
+		} catch (Exception e) {
+			dataResponse.setData("Error");
+			dataResponse.setMessage("Error: " + e.getMessage());
+			dataResponse.setSuccess(false);
+		}
+		return dataResponse;
 	}
 
 }

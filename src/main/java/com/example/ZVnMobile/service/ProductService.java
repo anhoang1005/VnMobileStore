@@ -14,6 +14,7 @@ import com.example.ZVnMobile.convert.ProductConvertter;
 import com.example.ZVnMobile.dto.ProductCardDto;
 import com.example.ZVnMobile.dto.ProductDetailDto;
 import com.example.ZVnMobile.dto.ProductDto;
+import com.example.ZVnMobile.dto.ProductOfSupplierDto;
 import com.example.ZVnMobile.dto.ProductTypeDto;
 import com.example.ZVnMobile.entities.CategoryEntity;
 import com.example.ZVnMobile.entities.ProductEntity;
@@ -188,6 +189,29 @@ public class ProductService implements IProductService {
 			dataResponse.setMessage("Loi: " + e.getMessage());
 		}
 
+		return dataResponse;
+	}
+
+	@Override
+	public DataResponse getProductBySupplier(Long id, int pageNumber) {
+		DataResponse dataResponse = new DataResponse();
+		try {
+			Pageable pageable = PageRequest.of(pageNumber - 1, 15);
+			
+			SupplierEntity supplierEntity = supplierRepository.findOneById(id);
+			Page<ProductEntity> listProduct = productRepository.findBySupplierEntityInProduct(supplierEntity, pageable);
+			List<ProductOfSupplierDto> listDtos = new ArrayList<>();
+			for(ProductEntity entity : listProduct) {
+				ProductOfSupplierDto dto = productConvertter.entityToProductSupplierDto(entity);
+				listDtos.add(dto);
+			}
+			dataResponse.setData(listDtos);
+			dataResponse.setSuccess(true);
+		} catch (Exception e) {
+			dataResponse.setData("Error");
+			dataResponse.setMessage("Error: " + e.getMessage());
+			dataResponse.setSuccess(false);
+		}
 		return dataResponse;
 	}
 

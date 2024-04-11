@@ -15,6 +15,9 @@ public class SupplierConverter {
 		dto.setEmail(entity.getEmail());
 		dto.setDescription(entity.getDescription());
 		dto.setAdress(entity.getAdress());
+		dto.setCreatedAt(entity.getCreatedAt());
+		dto.setDeleted(entity.isDeleted());
+		dto.setProductQuantity(entity.getListProductEntities().size());
 		return dto;
 	}
 }

@@ -51,4 +51,11 @@ public class AdminProductApi {
 		
 		return new ResponseEntity<>(iProductInfoService.getByProductId(id), HttpStatus.OK);
 	}
+	
+	@GetMapping("/getbysupplier/{id}/{pageNumber}")
+	public ResponseEntity<?> getProductBySupplier(
+			@PathVariable("id")Long id,
+			@PathVariable("pageNumber")int pageNumber){
+		return new ResponseEntity<>(iProductService.getProductBySupplier(id, pageNumber), HttpStatus.OK);
+	}
 }

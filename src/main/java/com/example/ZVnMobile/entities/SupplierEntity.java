@@ -1,5 +1,6 @@
 package com.example.ZVnMobile.entities;
 
+import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -32,6 +33,12 @@ public class SupplierEntity {
 	
 	@Column(name = "description", columnDefinition = "TEXT")
 	private String description;
+	
+	@Column(name = "created_at", columnDefinition = "TIMESTAMP")
+	private Date createdAt;
+	
+	@Column(name = "deleted", columnDefinition = "BIT")
+	private boolean deleted;
 	
 	@OneToMany(mappedBy = "supplierEntityInProduct")
 	private List<ProductEntity> listProductEntities;
@@ -81,6 +88,22 @@ public class SupplierEntity {
 
 	public String getDescription() {
 		return description;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+	
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
 
 	public void setDescription(String description) {

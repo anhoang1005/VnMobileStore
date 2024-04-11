@@ -1,5 +1,7 @@
 package com.example.ZVnMobile.dto;
 
+import java.util.Date;
+
 public class SupplierDto {
 	
 	private Long id;
@@ -8,6 +10,9 @@ public class SupplierDto {
 	private String phoneNumber;
 	private String description;
 	private String adress;
+	private int productQuantity;
+	private boolean deleted;
+	private Date createdAt;
 	public String getAdress() {
 		return adress;
 	}
@@ -43,5 +48,23 @@ public class SupplierDto {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public boolean isDeleted() {
+		return deleted;
+	}
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+	public int getProductQuantity() {
+		return productQuantity;
+	}
+	public void setProductQuantity(int productQuantity) {
+		this.productQuantity = productQuantity;
 	}
 }
