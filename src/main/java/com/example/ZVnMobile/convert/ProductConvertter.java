@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.ZVnMobile.dto.ProductCardDto;
+import com.example.ZVnMobile.dto.ProductDashBoardDto;
 import com.example.ZVnMobile.dto.ProductDetailDto;
 import com.example.ZVnMobile.dto.ProductDto;
 import com.example.ZVnMobile.dto.ProductOfSupplierDto;
@@ -133,6 +134,38 @@ public class ProductConvertter {
 		dto.setCategory(entity.getCategoryEntityInProduct().getCategoryName());
 		dto.setVersionQuantity(entity.getListProductTypeEntities().size());
 
+		Integer sumRateStar = 0;
+		for (ProductReviewEntity reviewEntity : entity.getListProductReviewEntities()) {
+			sumRateStar += reviewEntity.getRatingStar();
+		}
+		Double ratingStar = 1.0 * sumRateStar / entity.getListProductReviewEntities().size();
+		if (entity.getListProductReviewEntities().size() == 0) {
+			ratingStar = 0.0;
+		}
+		dto.setRateStar(ratingStar);
+		
+		int soldQuantity = 0;
+		for (ProductTypeEntity typeEntity : entity.getListProductTypeEntities()) {
+			for (ProductColorEntity colorEntity : typeEntity.getListTypeColorEntities()) {
+				soldQuantity += colorEntity.getSoldQuantity();
+			}
+		}
+		dto.setQuantitySold(soldQuantity);
+		return dto;
+	}
+	
+	public ProductDashBoardDto entityToProductDashBoardDto(ProductEntity entity) {
+		ProductDashBoardDto dto = new ProductDashBoardDto();
+		dto.setId(entity.getId());
+		dto.setThumbnail(entity.getThumbnail());
+		dto.setTitle(entity.getTitle());
+		dto.setCategory(entity.getCategoryEntityInProduct().getCategoryName());
+		dto.setSupplier(entity.getSupplierEntityInProduct().getSupplierName());
+		dto.setBasePrice(entity.getListProductTypeEntities().get(0).getBasePrice() + "VND");
+		dto.setCreatedAt(entity.getCreatedAt());
+		dto.setProductSlug(entity.getProductSlug());
+		dto.setDeleted(entity.isDeleted());
+		
 		Integer sumRateStar = 0;
 		for (ProductReviewEntity reviewEntity : entity.getListProductReviewEntities()) {
 			sumRateStar += reviewEntity.getRatingStar();

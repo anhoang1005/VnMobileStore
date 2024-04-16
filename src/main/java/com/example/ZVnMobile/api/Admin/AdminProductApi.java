@@ -18,6 +18,7 @@ import com.example.ZVnMobile.dto.ProductDto;
 import com.example.ZVnMobile.payload.request.InsertProductRequest;
 import com.example.ZVnMobile.service.impl.IProductInfoService;
 import com.example.ZVnMobile.service.impl.IProductService;
+import com.example.ZVnMobile.service.impl.IProductTypeService;
 
 @CrossOrigin
 @RestController
@@ -30,6 +31,8 @@ public class AdminProductApi {
 	@Autowired
 	private IProductInfoService iProductInfoService;
 	
+	@Autowired IProductTypeService itypeService;
+	
 	@PostMapping("/insert")
 	public ResponseEntity<?> insertProduct(@RequestBody InsertProductRequest insertProductRequest){
 		return new ResponseEntity<>(iProductService.insertProduct(insertProductRequest), HttpStatus.OK);
@@ -41,8 +44,10 @@ public class AdminProductApi {
 	}
 	
 	@DeleteMapping("/delete")
-	public ResponseEntity<?> updateProduct(@RequestParam("id") Long productId){
-		return new ResponseEntity<>(iProductService.deleteProduct(productId), HttpStatus.OK);
+	public ResponseEntity<?> deleteProduct(
+			@RequestParam("id")Long id,
+			@RequestParam("deleted")boolean deleted){
+		return new ResponseEntity<>(iProductService.lockOrUnlockProduct(id, deleted), HttpStatus.OK);
 	}
 	
 	@GetMapping("/info/{id}")
@@ -57,5 +62,15 @@ public class AdminProductApi {
 			@PathVariable("id")Long id,
 			@PathVariable("pageNumber")int pageNumber){
 		return new ResponseEntity<>(iProductService.getProductBySupplier(id, pageNumber), HttpStatus.OK);
+	}
+	
+	@GetMapping("/dashboard/{pageNumber}")
+	public ResponseEntity<?> getDashboad(@PathVariable("pageNumber") int pageNumber){
+		return new ResponseEntity<>(iProductService.getProductDashboard(pageNumber), HttpStatus.OK);
+	}
+	
+	@GetMapping("/gettype/{id}")
+	public ResponseEntity<?> getTypeProduct(@PathVariable("id")Long id){
+		return new ResponseEntity<>(itypeService.getTypeByProductId(id), HttpStatus.OK);
 	}
 }

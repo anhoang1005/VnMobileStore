@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.ZVnMobile.convert.ProductConvertter;
 import com.example.ZVnMobile.dto.ProductCardDto;
+import com.example.ZVnMobile.dto.ProductDashBoardDto;
 import com.example.ZVnMobile.dto.ProductDetailDto;
 import com.example.ZVnMobile.dto.ProductDto;
 import com.example.ZVnMobile.dto.ProductOfSupplierDto;
@@ -207,6 +208,46 @@ public class ProductService implements IProductService {
 			}
 			dataResponse.setData(listDtos);
 			dataResponse.setSuccess(true);
+		} catch (Exception e) {
+			dataResponse.setData("Error");
+			dataResponse.setMessage("Error: " + e.getMessage());
+			dataResponse.setSuccess(false);
+		}
+		return dataResponse;
+	}
+
+	@Override
+	public DataResponse getProductDashboard(int pageNumber) {
+		DataResponse dataResponse = new DataResponse();
+		Pageable pageable = PageRequest.of(pageNumber-1, 15);
+		try {
+			Page<ProductEntity> listEntities = productRepository.findAll(pageable);
+			List<ProductDashBoardDto> listDtos = new ArrayList<>();
+			for(ProductEntity entity : listEntities) {
+				ProductDashBoardDto dto = productConvertter.entityToProductDashBoardDto(entity);
+				listDtos.add(dto);
+			}
+			dataResponse.setData(listDtos);
+			dataResponse.setSuccess(true);
+		} catch (Exception e) {
+			dataResponse.setData("Error");
+			dataResponse.setMessage("Error: " + e.getMessage());
+			dataResponse.setSuccess(false);
+		}
+		return dataResponse;
+	}
+
+	@Override
+	public DataResponse lockOrUnlockProduct(Long id, boolean deleted) {
+		DataResponse dataResponse = new DataResponse();
+		try {
+			ProductEntity productEntity = productRepository.findOneById(id);
+			if(productEntity!=null) {
+				productEntity.setDeleted(deleted);
+				productEntity = productRepository.save(productEntity);
+				dataResponse.setData("OK");
+				dataResponse.setSuccess(true);
+			}
 		} catch (Exception e) {
 			dataResponse.setData("Error");
 			dataResponse.setMessage("Error: " + e.getMessage());

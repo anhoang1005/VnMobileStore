@@ -13,4 +13,6 @@ public interface IProductService {
 	DataResponse deleteProduct(Long id);
 	DataResponse getProductDetail(String productSlug);
 	DataResponse getProductBySupplier(Long id, int pageNumber);
+	DataResponse getProductDashboard(int pageNumber);
+	DataResponse lockOrUnlockProduct(Long id, boolean deleted);
 }
