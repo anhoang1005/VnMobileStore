@@ -4,9 +4,6 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -14,11 +11,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "product_type")
-public class ProductTypeEntity {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+public class ProductTypeEntity extends BaseEntity{
 	
 	@Column(columnDefinition = "INT")
 	private Integer ram;
@@ -42,14 +35,6 @@ public class ProductTypeEntity {
 
 	@OneToMany(mappedBy = "productTypeEntityInColor")
 	private List<ProductColorEntity> listTypeColorEntities;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public Integer getRam() {
 		return ram;

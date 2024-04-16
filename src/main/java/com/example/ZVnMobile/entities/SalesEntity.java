@@ -4,18 +4,11 @@ import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "sales")
-public class SalesEntity {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+public class SalesEntity extends BaseEntity{
 	
 	@Column(columnDefinition = "VARCHAR(255)")
 	private String title;
@@ -30,19 +23,10 @@ public class SalesEntity {
 	private Double maxValue;
 	
 	@Column(columnDefinition = "TIMESTAMP")
-	private Date created_at;
-	
-	@Column(columnDefinition = "TIMESTAMP")
 	private Date expiration_at;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
+	
+	@Column(columnDefinition = "BIGINT")
+	private Long quantity;
 	public String getTitle() {
 		return title;
 	}
@@ -73,14 +57,6 @@ public class SalesEntity {
 
 	public void setMaxValue(Double maxValue) {
 		this.maxValue = maxValue;
-	}
-
-	public Date getCreated_at() {
-		return created_at;
-	}
-
-	public void setCreated_at(Date created_at) {
-		this.created_at = created_at;
 	}
 
 	public Date getExpiration_at() {

@@ -2,20 +2,13 @@ package com.example.ZVnMobile.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "orders_item")
-public class OrderItemEntity {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+public class OrderItemEntity extends BaseEntity{
 	
 	@Column(columnDefinition = "VARCHAR(255)")
 	private String color;
@@ -27,7 +20,7 @@ public class OrderItemEntity {
 	private int quantity;
 	
 	@Column(columnDefinition = "DECIMAL")
-	private Double total_price;
+	private Double totalPrice;
 	
 	@ManyToOne
 	@JoinColumn(name = "order_id")
@@ -36,14 +29,6 @@ public class OrderItemEntity {
 	@ManyToOne
 	@JoinColumn(name = "productColor_id")
 	private ProductColorEntity productColorEntityInItem;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getColor() {
 		return color;
@@ -69,14 +54,6 @@ public class OrderItemEntity {
 		this.quantity = quantity;
 	}
 
-	public Double getTotal_price() {
-		return total_price;
-	}
-
-	public void setTotal_price(Double total_price) {
-		this.total_price = total_price;
-	}
-
 	public OrderEntity getOrderEntityByItem() {
 		return orderEntityByItem;
 	}
@@ -91,5 +68,13 @@ public class OrderItemEntity {
 
 	public void setProductColorEntityInItem(ProductColorEntity productColorEntityInItem) {
 		this.productColorEntityInItem = productColorEntityInItem;
+	}
+
+	public Double getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(Double totalPrice) {
+		this.totalPrice = totalPrice;
 	}
 }

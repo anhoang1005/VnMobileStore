@@ -1,7 +1,6 @@
 package com.example.ZVnMobile.service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +69,6 @@ public class UsersService implements IUsersService{
 				usersEntity.setAvatar(editProfileRequest.getAvatar());
 				usersEntity.setFullName(editProfileRequest.getFullName());
 				usersEntity.setPhoneNumber(editProfileRequest.getPhoneNumber());
-				usersEntity.setUpdatedAt(new Date());
 				usersEntity = userRepository.save(usersEntity);
 				
 				dataResponse.setData("ok");
@@ -146,7 +144,7 @@ public class UsersService implements IUsersService{
 				String hashPassword = passwordEncoder.encode(newPassword);
 				usersEntity.setPassword(hashPassword);
 				usersEntity.setVerifyCode(null);
-				usersEntity.setUpdatedAt(new Date());
+				//usersEntity.setUpdatedAt(new Date());
 				usersEntity = userRepository.save(usersEntity);
 				
 				dataResponse.setSuccess(true);

@@ -1,23 +1,15 @@
 package com.example.ZVnMobile.entities;
 
-import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
-public class UsersEntity {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+public class UsersEntity extends BaseEntity{
 
 	@Column(columnDefinition = "VARCHAR(100)")
 	private String fullName;
@@ -28,7 +20,7 @@ public class UsersEntity {
 	@Column(columnDefinition = "VARCHAR(15)")
 	private String phoneNumber;
 
-	@Column(columnDefinition = "VARCHAR(150)")
+	@Column(columnDefinition = "VARCHAR(150)", unique = true)
 	private String email;
 
 	@Column(columnDefinition = "VARCHAR(255)")
@@ -42,12 +34,6 @@ public class UsersEntity {
 
 	@Column
 	private boolean enable;
-
-	@Column(columnDefinition = "TIMESTAMP")
-	private Date createdAt;
-
-	@Column(columnDefinition = "TIMESTAMP")
-	private Date updatedAt;
 	
 	@Column
 	private boolean deleted;
@@ -57,14 +43,6 @@ public class UsersEntity {
 	
 	@OneToMany(mappedBy = "usersEntityInReview")
 	private List<ProductReviewEntity> listProductReviewEntities;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getFullName() {
 		return fullName;
@@ -128,22 +106,6 @@ public class UsersEntity {
 
 	public void setEnable(boolean enable) {
 		this.enable = enable;
-	}
-
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public Date getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
 	}
 
 	public boolean isDeleted() {

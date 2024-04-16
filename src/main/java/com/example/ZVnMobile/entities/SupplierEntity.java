@@ -1,23 +1,15 @@
 package com.example.ZVnMobile.entities;
 
-import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "supplier")
-public class SupplierEntity {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+public class SupplierEntity extends BaseEntity{
 	
 	@Column(name = "supplier_name", columnDefinition = "VARCHAR(150)")
 	private String supplierName;
@@ -34,9 +26,6 @@ public class SupplierEntity {
 	@Column(name = "description", columnDefinition = "TEXT")
 	private String description;
 	
-	@Column(name = "created_at", columnDefinition = "TIMESTAMP")
-	private Date createdAt;
-	
 	@Column(name = "deleted", columnDefinition = "BIT")
 	private boolean deleted;
 	
@@ -45,14 +34,6 @@ public class SupplierEntity {
 	
 	@OneToMany(mappedBy = "supplierEntityInBill")
 	private List<SupplierBillEntity> listSupplierBillEntities;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getSupplierName() {
 		return supplierName;
@@ -96,14 +77,6 @@ public class SupplierEntity {
 
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
-	}
-	
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
 	}
 
 	public void setDescription(String description) {

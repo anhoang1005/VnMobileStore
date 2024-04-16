@@ -1,23 +1,14 @@
 package com.example.ZVnMobile.entities;
 
-import java.util.Date;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "product_review")
-public class ProductReviewEntity {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+public class ProductReviewEntity extends BaseEntity{
 	
 	@Column(columnDefinition = "INT")
 	private int ratingStar;
@@ -25,14 +16,11 @@ public class ProductReviewEntity {
 	@Column(columnDefinition = "TEXT")
 	private String comment;
 	
+	@Column(columnDefinition = "TEXT")
+	private String images;
+	
 	@Column(columnDefinition = "INT")
 	private Integer likeCount;
-	
-	@Column(columnDefinition = "TIMESTAMP")
-	private Date createdAt;
-	
-	@Column(columnDefinition = "TIMESTAMP")
-	private Date updateAt;
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
@@ -41,14 +29,6 @@ public class ProductReviewEntity {
 	@ManyToOne
 	@JoinColumn(name = "product_id")
 	private ProductEntity productEntityInReview;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public int getRatingStar() {
 		return ratingStar;
@@ -90,19 +70,19 @@ public class ProductReviewEntity {
 		this.likeCount = like;
 	}
 
-	public Date getCreatedAt() {
-		return createdAt;
+	public String getImages() {
+		return images;
 	}
 
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
+	public void setImages(String images) {
+		this.images = images;
 	}
 
-	public Date getUpdateAt() {
-		return updateAt;
+	public Integer getLikeCount() {
+		return likeCount;
 	}
 
-	public void setUpdateAt(Date updateAt) {
-		this.updateAt = updateAt;
+	public void setLikeCount(Integer likeCount) {
+		this.likeCount = likeCount;
 	}
 }

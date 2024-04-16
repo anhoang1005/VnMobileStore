@@ -132,7 +132,6 @@ public class ProductReviewService implements IProductReviewService{
 			ProductReviewEntity  reviewEntity = productReviewRepository.findOneById(request.getId());
 			reviewEntity.setRatingStar(request.getRatingStar());
 			reviewEntity.setComment(request.getComment());
-			reviewEntity.setUpdateAt(new Date());
 			reviewEntity = productReviewRepository.save(reviewEntity);
 			
 			dataResponse.setSuccess(true);

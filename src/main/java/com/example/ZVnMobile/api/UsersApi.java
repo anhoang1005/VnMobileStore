@@ -33,14 +33,7 @@ public class UsersApi {
 			@RequestParam("password")String password){
 		return new ResponseEntity<>(iLoginService.signinUser(username, password), HttpStatus.OK);
 	}
-	
-	@PostMapping("/signin")
-	public ResponseEntity<?> signinUser(
-			@RequestParam("username")String username,
-			@RequestParam("password")String password){
-		return new ResponseEntity<>(iLoginService.loginUser(username, password), HttpStatus.OK);
-	}
-	
+
 	@PostMapping("/signup")
 	public ResponseEntity<?> signupUser(@RequestBody SignupDto signupDto){
 		return new ResponseEntity<>(iLoginService.signupUser(signupDto), HttpStatus.OK);

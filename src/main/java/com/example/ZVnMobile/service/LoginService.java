@@ -5,9 +5,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.ZVnMobile.convert.LoginConverter;
 import com.example.ZVnMobile.dto.SignupDto;
 import com.example.ZVnMobile.entities.UsersEntity;
 import com.example.ZVnMobile.payload.DataResponse;
@@ -15,20 +17,22 @@ import com.example.ZVnMobile.payload.JwtTokenResponse;
 import com.example.ZVnMobile.repository.UserRepository;
 import com.example.ZVnMobile.service.impl.ILoginService;
 import com.example.ZVnMobile.service.impl.IMailService;
-import com.example.ZVnMobile.utils.JwtUtils;
 import com.example.ZVnMobile.utils.UsersHelperUtils;
 
 @Service
 public class LoginService implements ILoginService {
+	
+	@Value("${jwt.existenceTime}")
+	private Long existenceTime;
 
 	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-
+	
 	@Autowired
-	private JwtUtils jwtUtils;
+	private LoginConverter loginConverter;
 
 	@Autowired
 	private UsersHelperUtils usersHelperUtils;
@@ -37,7 +41,7 @@ public class LoginService implements ILoginService {
 	private IMailService iMailService;
 
 	@Override
-	public DataResponse loginUser(String username, String password) {
+	public DataResponse signinUser(String username, String password) {
 		DataResponse dataResponse = new DataResponse();
 		try {
 			UsersEntity user = userRepository.findByEmail(username);
@@ -45,25 +49,31 @@ public class LoginService implements ILoginService {
 				if (user.isEnable() == true && user.isDeleted() == true) {
 					List<String> roles = new ArrayList<>();
 					roles.add(user.getRole());
-
+					JwtTokenResponse jwtTokenResponse = loginConverter.userEntityToJwtToken(user, existenceTime);
 					dataResponse.setSuccess(true);
-					dataResponse.setMessage("Thang cong!");
-					dataResponse.setData(jwtUtils.generateTokens(user.getEmail(), roles));
-				} else {
+					dataResponse.setMessage("Đăng nhập thành công!");
+					dataResponse.setData(jwtTokenResponse);
+				} else if(user.isEnable() == false && user.isDeleted()==true){
 					dataResponse.setSuccess(false);
-					dataResponse.setMessage("Tai khoan da bi khoa!");
+					dataResponse.setMessage("Tài khoản chưa xác thực!");
+				} else if(user.isDeleted() == false && user.isEnable() == true){
+					dataResponse.setSuccess(false);
+					dataResponse.setMessage("Tài khoản đã bị khóa!");
+				}
+				else if(user.isDeleted() == false && user.isEnable() == false){
+					dataResponse.setSuccess(false);
+					dataResponse.setMessage("Tài khoản của bạn đã bị khóa do chưa xác thực!");
 					dataResponse.setData(null);
 				}
 			} else {
 				dataResponse.setSuccess(false);
-				dataResponse.setMessage("Sai tai khoan hoac mat khau!");
+				dataResponse.setMessage("Sai tài khoản hoặc mật khẩu!");
 				dataResponse.setData(null);
 			}
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Loi: " + e.getMessage());
-			dataResponse.setData(null);
+			dataResponse.setErrorCode(e.getMessage());
 		}
 		return dataResponse;
 	}
@@ -84,6 +94,7 @@ public class LoginService implements ILoginService {
 		entity.setDeleted(true);
 		entity.setAvatar("/img/avatar/user.png");
 		entity.setVerifyCode("123456");
+		entity.setCreatedBy(signupDto.getEmail());
 		try {
 			String verifyCode = usersHelperUtils.verifyCode();
 			boolean isSend = iMailService.sendVerifyEmail(signupDto.getEmail(), verifyCode);
@@ -118,7 +129,7 @@ public class LoginService implements ILoginService {
 			if (usersEntity != null && verify.equals(usersEntity.getVerifyCode())) {
 				usersEntity.setEnable(true);
 				usersEntity.setVerifyCode(null);
-				usersEntity.setUpdatedAt(new Date());
+				//usersEntity.setUpdatedAt(new Date());
 				usersEntity = userRepository.save(usersEntity);
 				dataResponse.setSuccess(true);
 				dataResponse.setMessage("Xac nhan thanh cong!");
@@ -133,46 +144,6 @@ public class LoginService implements ILoginService {
 		return dataResponse;
 	}
 
-	@Override
-	public DataResponse signinUser(String username, String password) {
-		DataResponse dataResponse = new DataResponse();
-		try {
-			UsersEntity user = userRepository.findByEmail(username);
-			if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-				if (user.isEnable() == true && user.isDeleted() == true) {
-					List<String> roles = new ArrayList<>();
-					roles.add(user.getRole());
-
-					JwtTokenResponse jwtTokenResponse = new JwtTokenResponse();
-					jwtTokenResponse.setEmail(user.getEmail());
-					jwtTokenResponse.setFullName(user.getFullName());
-					jwtTokenResponse.setRole(user.getRole());
-					jwtTokenResponse.setTokenType("Bearer");
-					jwtTokenResponse.setIssuedAt(new Date());
-					jwtTokenResponse.setAvatar(user.getAvatar());
-					jwtTokenResponse.setExpiresAt(new Date(System.currentTimeMillis() + 7 * 24 * 3600 * 1000));
-					jwtTokenResponse.setToken(jwtUtils.generateTokens(username, roles));
-
-					dataResponse.setSuccess(true);
-					dataResponse.setMessage("Thanh cong!");
-					dataResponse.setData(jwtTokenResponse);
-				} else {
-					dataResponse.setSuccess(false);
-					dataResponse.setMessage("Tài khoản của bạn đã bị khóa!");
-					dataResponse.setData(null);
-				}
-			} else {
-				dataResponse.setSuccess(false);
-				dataResponse.setMessage("Sai tài khoản hoặc mật khẩu!");
-				dataResponse.setData(null);
-			}
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Loi: " + e.getMessage());
-			dataResponse.setData(null);
-		}
-		return dataResponse;
-	}
+	
 
 }

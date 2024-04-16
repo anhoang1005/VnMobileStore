@@ -26,8 +26,8 @@ public class OrderConverter {
 		dto.setCustomerNote(entity.getCustomerNote());
 		dto.setTotalPrice(entity.getTotal_price());
 		dto.setStatus(entity.getStatus());
-		dto.setCreatedAt(entity.getCreated_at());
-		dto.setUpdatedAt(entity.getUpdate_at());
+		dto.setCreatedAt(entity.getCreatedAt());
+		dto.setUpdatedAt(entity.getModifiedAt());
 		dto.setDeliveryAt(entity.getDelivery_at());
 
 		dto.setOrderTracking(orderTrackingEntityToDto(entity.getOrderTrackingEntityInOrder()));
@@ -56,7 +56,7 @@ public class OrderConverter {
 		dto.setId(entity.getId());
 		dto.setPrice(entity.getPrice());
 		dto.setQuantity(entity.getQuantity());
-		dto.setTotalPrice(entity.getTotal_price());
+		dto.setTotalPrice(entity.getTotalPrice());
 		dto.setOrderColorId(entity.getProductColorEntityInItem().getId());
 		dto.setColor(entity.getProductColorEntityInItem().getColor());
 		return dto;

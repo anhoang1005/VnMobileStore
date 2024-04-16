@@ -5,9 +5,6 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -16,11 +13,10 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "orders")
-public class OrderEntity {
+public class OrderEntity extends BaseEntity{
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@Column(columnDefinition = "VARCHAR(255)")
+	private String orderCode;
 	
 	@Column(columnDefinition = "VARCHAR(255)")
 	private String status;
@@ -32,13 +28,7 @@ public class OrderEntity {
 	private String customerNote;
 	
 	@Column(columnDefinition = "TIMESTAMP")
-	private Date created_at;
-	
-	@Column(columnDefinition = "TIMESTAMP")
 	private Date delivery_at;
-	
-	@Column(columnDefinition = "TIMESTAMP")
-	private Date update_at;
 	
 	@OneToMany(mappedBy = "orderEntityInHistory")
 	private List<OrderHistoryEntity> listOrderHistoryEntities;
@@ -56,14 +46,6 @@ public class OrderEntity {
 	
 	@OneToOne(mappedBy = "orderEntityInTracking")
 	private OrderTrackingEntity orderTrackingEntityInOrder;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getStatus() {
 		return status;
@@ -88,29 +70,13 @@ public class OrderEntity {
 	public void setCustomerNote(String customerNote) {
 		this.customerNote = customerNote;
 	}
-
-	public Date getCreated_at() {
-		return created_at;
-	}
-
-	public void setCreated_at(Date created_at) {
-		this.created_at = created_at;
-	}
-
+	
 	public Date getDelivery_at() {
 		return delivery_at;
 	}
 
 	public void setDelivery_at(Date delivery_at) {
 		this.delivery_at = delivery_at;
-	}
-
-	public Date getUpdate_at() {
-		return update_at;
-	}
-
-	public void setUpdate_at(Date update_at) {
-		this.update_at = update_at;
 	}
 
 	public List<OrderHistoryEntity> getListOrderHistoryEntities() {

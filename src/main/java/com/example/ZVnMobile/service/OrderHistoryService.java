@@ -20,8 +20,8 @@ public class OrderHistoryService implements IOrderHistoryService{
 		try {
 			OrderHistoryEntity historyEntity = new OrderHistoryEntity();
 			historyEntity.setEvent("Đơn hàng được tạo");
-			historyEntity.setEventDes("Đơn hàng được tạo vào " + orderEntity.getCreated_at());
-			historyEntity.setCreatedAt(orderEntity.getCreated_at());
+			historyEntity.setEventDes("Đơn hàng được bạn tạo vào " + orderEntity.getCreatedAt());
+			historyEntity.setCreatedAt(orderEntity.getCreatedAt());
 			historyEntity.setOrderEntityInHistory(orderEntity);
 			historyEntity = historyRepository.save(historyEntity);
 			
@@ -40,9 +40,9 @@ public class OrderHistoryService implements IOrderHistoryService{
 		boolean isSuccess = false;
 		try {
 			OrderHistoryEntity historyEntity = new OrderHistoryEntity();
-			historyEntity.setCreatedAt(orderEntity.getUpdate_at());
+			historyEntity.setCreatedAt(orderEntity.getModifiedAt());
 			historyEntity.setEvent(status);
-			historyEntity.setEventDes(status + " vào lúc " + orderEntity.getUpdate_at());
+			historyEntity.setEventDes(status + " vào lúc " + orderEntity.getModifiedAt() + "bởi Admin");
 			historyEntity.setOrderEntityInHistory(orderEntity);
 			
 			historyEntity = historyRepository.save(historyEntity);

@@ -23,7 +23,8 @@ public class UsersConverter {
 		dto.setVerifyCode(entity.getVerifyCode());
 		dto.setEnable(entity.isEnable());
 		dto.setCreatedAt(entity.getCreatedAt());
-		dto.setUpdatedAt(entity.getUpdatedAt());
+		//dto.setUpdatedAt(entity.getUpdatedAt());
+		dto.setUpdatedAt(entity.getModifiedAt());
 		dto.setDeleted(entity.isDeleted());
 		return dto;
 	}

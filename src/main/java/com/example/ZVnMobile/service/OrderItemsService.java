@@ -31,7 +31,7 @@ public class OrderItemsService implements IOrderItemService{
 				itemEntity.setColor(itemsDto.getColor());
 				itemEntity.setPrice(itemsDto.getPrice());
 				itemEntity.setQuantity(itemsDto.getQuantity());
-				itemEntity.setTotal_price(itemsDto.getTotalPrice());
+				itemEntity.setTotalPrice(itemsDto.getTotalPrice());
 				itemEntity.setOrderEntityByItem(orderEntity);
 				
 				ProductColorEntity colorEntity = colorRepository.findOneById(itemsDto.getOrderColorId());
