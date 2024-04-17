@@ -19,10 +19,10 @@ public class ProductTypeEntity extends BaseEntity{
 	@Column(columnDefinition = "INT")
 	private Integer room;
 	
-	@Column(columnDefinition = "DECIMAL")
+	@Column(columnDefinition = "DECIMAL", nullable = false)
 	private Double basePrice;
 	
-	@Column(columnDefinition = "DECIMAL")
+	@Column(columnDefinition = "DECIMAL", nullable = false)
 	private Double price;
 	
 	@Column(columnDefinition = "DECIMAL")

@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 @Table(name = "sales")
 public class SalesEntity extends BaseEntity{
 	
-	@Column(columnDefinition = "VARCHAR(255)")
+	@Column(columnDefinition = "VARCHAR(255)", nullable = false)
 	private String title;
 	
 	@Column(columnDefinition = "TEXT")

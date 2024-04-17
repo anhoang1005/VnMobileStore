@@ -26,9 +26,9 @@ public class CloudinaryService {
             dataResponse.setData(data);
             dataResponse.setSuccess(true);
         }catch (IOException io){
-        	dataResponse.setData("Error");
+        	dataResponse.setMessage("Error");
             dataResponse.setSuccess(false);
-            dataResponse.setMessage("Error " + io.getMessage());
+            dataResponse.setErrorCode(io.getMessage());
             throw new RuntimeException("Image upload fail");
         }
         return dataResponse;

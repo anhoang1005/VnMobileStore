@@ -24,11 +24,11 @@ public class OrderConverter {
 		dto.setOrderId(entity.getId());
 		dto.setUserId(entity.getUsersEntityInOrder().getId());
 		dto.setCustomerNote(entity.getCustomerNote());
-		dto.setTotalPrice(entity.getTotal_price());
+		dto.setTotalPrice(entity.getTotalPrice());
 		dto.setStatus(entity.getStatus());
 		dto.setCreatedAt(entity.getCreatedAt());
 		dto.setUpdatedAt(entity.getModifiedAt());
-		dto.setDeliveryAt(entity.getDelivery_at());
+		dto.setDeliveryAt(entity.getDeliveryAt());
 
 		dto.setOrderTracking(orderTrackingEntityToDto(entity.getOrderTrackingEntityInOrder()));
 		dto.setOrderPayment(orderPaymentEntityToDto(entity.getOrderPaymentEntityInOrder()));

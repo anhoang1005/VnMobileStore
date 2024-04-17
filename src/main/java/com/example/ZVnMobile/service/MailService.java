@@ -34,7 +34,7 @@ public class MailService implements IMailService{
 	        javaMailSender.send(message);
 	        isSucess = true;
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		
 		return isSucess;

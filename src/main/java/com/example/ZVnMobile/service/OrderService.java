@@ -93,7 +93,7 @@ public class OrderService implements IOrderService {
 			orderEntity.setCustomerNote(checkOutRequest.getCustomerNote());
 			orderEntity.setCreatedAt(new Date());
 			orderEntity.setStatus("Chờ xác nhận");
-			orderEntity.setTotal_price(checkOutRequest.getTotalPrice());
+			orderEntity.setTotalPrice(checkOutRequest.getTotalPrice());
 			// Luu Order moi vao csdl
 			orderEntity = orderRepository.save(orderEntity);
 
@@ -123,7 +123,7 @@ public class OrderService implements IOrderService {
 			OrderEntity orderEntity = orderRepository.findOneById(orderId);
 			orderEntity.setStatus(status);
 			if (status.equals("Đã nhận hàng")) {
-				orderEntity.setDelivery_at(new Date());
+				orderEntity.setDeliveryAt(new Date());
 			}
 			orderEntity = orderRepository.save(orderEntity);
 			boolean isInsertHistory = ihistoryService.insertNewHistory(orderEntity, status);

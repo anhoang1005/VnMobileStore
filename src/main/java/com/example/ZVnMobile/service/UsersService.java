@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.ZVnMobile.convert.UsersConverter;
 import com.example.ZVnMobile.dto.UserInfoDto;
@@ -83,6 +84,7 @@ public class UsersService implements IUsersService{
 	}
 
 	@Override
+	@Transactional
 	public DataResponse changePassword(String email, String password, String newPassword) {
 		DataResponse dataResponse = new DataResponse();
 		UsersEntity usersEntity = new UsersEntity();

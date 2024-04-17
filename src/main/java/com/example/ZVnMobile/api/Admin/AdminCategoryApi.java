@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.ZVnMobile.dto.CategoryDto;
 import com.example.ZVnMobile.service.impl.ICategoryService;
 
+import jakarta.websocket.server.PathParam;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/api/admin/category")
@@ -44,4 +46,11 @@ public class AdminCategoryApi {
 			@RequestParam("deleted") boolean status ){
 		return new ResponseEntity<>(iCategoryService.lockOrUnlockCategory(id, status), HttpStatus.OK);
 	}
+	
+	@GetMapping("/search")
+	public ResponseEntity<?> getByKeywordCategory(
+			@PathParam("keyword") String keyword){
+		return new ResponseEntity<>(iCategoryService.getBySearch(keyword), HttpStatus.OK);
+	}
+	
 }

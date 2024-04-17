@@ -14,10 +14,10 @@ import jakarta.persistence.Table;
 @Table(name = "product")
 public class ProductEntity extends BaseEntity{
 	
-	@Column(name = "title", columnDefinition = "TEXT")
+	@Column(name = "title", columnDefinition = "TEXT", nullable = false)
 	private String title;
 	
-	@Column(name = "product_slug", columnDefinition = "TEXT")
+	@Column(name = "product_slug", columnDefinition = "TEXT", unique = true, nullable = false)
 	private String productSlug;
 	
 	@Column(name = "thumbnail", columnDefinition = "TEXT")

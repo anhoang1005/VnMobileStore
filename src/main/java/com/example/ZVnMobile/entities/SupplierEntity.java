@@ -11,13 +11,13 @@ import jakarta.persistence.Table;
 @Table(name = "supplier")
 public class SupplierEntity extends BaseEntity{
 	
-	@Column(name = "supplier_name", columnDefinition = "VARCHAR(150)")
+	@Column(name = "supplier_name", columnDefinition = "VARCHAR(150)", nullable = false)
 	private String supplierName;
 	
 	@Column(name = "email", columnDefinition = "VARCHAR(150)")
 	private String email;
 	
-	@Column(name = "phone_number", columnDefinition = "VARCHAR(20)")
+	@Column(name = "phone_number", columnDefinition = "VARCHAR(20)", nullable = false)
 	private String phoneNumber;
 	
 	@Column(name = "adress", columnDefinition = "TEXT")
@@ -26,7 +26,7 @@ public class SupplierEntity extends BaseEntity{
 	@Column(name = "description", columnDefinition = "TEXT")
 	private String description;
 	
-	@Column(name = "deleted", columnDefinition = "BIT")
+	@Column(name = "deleted", columnDefinition = "BIT", nullable = false)
 	private boolean deleted;
 	
 	@OneToMany(mappedBy = "supplierEntityInProduct")

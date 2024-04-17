@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 @Table(name = "product_color")
 public class ProductColorEntity extends BaseEntity{
 	
-	@Column(columnDefinition = "VARCHAR(255)")
+	@Column(columnDefinition = "VARCHAR(255)", nullable = false)
 	private String color;
 	
 	@Column(columnDefinition = "INT")

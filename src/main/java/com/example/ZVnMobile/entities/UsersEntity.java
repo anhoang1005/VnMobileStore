@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
 @Table(name = "users")
 public class UsersEntity extends BaseEntity{
 
-	@Column(columnDefinition = "VARCHAR(100)")
+	@Column(columnDefinition = "VARCHAR(100)", nullable = false)
 	private String fullName;
 
 	@Column(columnDefinition = "VARCHAR(100)")
@@ -19,23 +19,23 @@ public class UsersEntity extends BaseEntity{
 
 	@Column(columnDefinition = "VARCHAR(15)")
 	private String phoneNumber;
-
-	@Column(columnDefinition = "VARCHAR(150)", unique = true)
+	
+	@Column(columnDefinition = "VARCHAR(150)", unique = true, 	nullable = false)
 	private String email;
 
-	@Column(columnDefinition = "VARCHAR(255)")
+	@Column(columnDefinition = "VARCHAR(255)", nullable = false)
 	private String password;
 	
-	@Column(columnDefinition = "VARCHAR(20)")
+	@Column(columnDefinition = "VARCHAR(20)", nullable = false)
 	private String role;
 
 	@Column(columnDefinition = "VARCHAR(64)")
 	private String verifyCode;
 
-	@Column
+	@Column(nullable = false)
 	private boolean enable;
 	
-	@Column
+	@Column(nullable = false)
 	private boolean deleted;
 	
 	@OneToMany(mappedBy = "usersEntityInOrder")

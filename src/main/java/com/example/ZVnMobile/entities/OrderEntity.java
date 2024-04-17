@@ -15,20 +15,20 @@ import jakarta.persistence.Table;
 @Table(name = "orders")
 public class OrderEntity extends BaseEntity{
 	
-	@Column(columnDefinition = "VARCHAR(255)")
+	@Column(columnDefinition = "VARCHAR(255)", nullable = false)
 	private String orderCode;
 	
-	@Column(columnDefinition = "VARCHAR(255)")
+	@Column(columnDefinition = "VARCHAR(255)", nullable = false)
 	private String status;
 	
-	@Column(columnDefinition = "DECIMAL")
-	private Double total_price;
+	@Column(columnDefinition = "DECIMAL", nullable = false)
+	private Double totalPrice;
 	
 	@Column(columnDefinition = "TEXT")
 	private String customerNote;
 	
 	@Column(columnDefinition = "TIMESTAMP")
-	private Date delivery_at;
+	private Date deliveryAt;
 	
 	@OneToMany(mappedBy = "orderEntityInHistory")
 	private List<OrderHistoryEntity> listOrderHistoryEntities;
@@ -47,6 +47,14 @@ public class OrderEntity extends BaseEntity{
 	@OneToOne(mappedBy = "orderEntityInTracking")
 	private OrderTrackingEntity orderTrackingEntityInOrder;
 
+	public String getOrderCode() {
+		return orderCode;
+	}
+
+	public void setOrderCode(String orderCode) {
+		this.orderCode = orderCode;
+	}
+
 	public String getStatus() {
 		return status;
 	}
@@ -55,12 +63,12 @@ public class OrderEntity extends BaseEntity{
 		this.status = status;
 	}
 
-	public Double getTotal_price() {
-		return total_price;
+	public Double getTotalPrice() {
+		return totalPrice;
 	}
 
-	public void setTotal_price(Double total_price) {
-		this.total_price = total_price;
+	public void setTotalPrice(Double totalPrice) {
+		this.totalPrice = totalPrice;
 	}
 
 	public String getCustomerNote() {
@@ -70,13 +78,13 @@ public class OrderEntity extends BaseEntity{
 	public void setCustomerNote(String customerNote) {
 		this.customerNote = customerNote;
 	}
-	
-	public Date getDelivery_at() {
-		return delivery_at;
+
+	public Date getDeliveryAt() {
+		return deliveryAt;
 	}
 
-	public void setDelivery_at(Date delivery_at) {
-		this.delivery_at = delivery_at;
+	public void setDeliveryAt(Date deliveryAt) {
+		this.deliveryAt = deliveryAt;
 	}
 
 	public List<OrderHistoryEntity> getListOrderHistoryEntities() {
@@ -117,6 +125,5 @@ public class OrderEntity extends BaseEntity{
 
 	public void setOrderTrackingEntityInOrder(OrderTrackingEntity orderTrackingEntityInOrder) {
 		this.orderTrackingEntityInOrder = orderTrackingEntityInOrder;
-	}
-	
+	}	
 }

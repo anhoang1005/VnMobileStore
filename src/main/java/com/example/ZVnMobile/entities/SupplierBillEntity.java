@@ -10,13 +10,13 @@ import jakarta.persistence.Table;
 @Table(name = "supplier_bill")
 public class SupplierBillEntity extends BaseEntity{
 	
-	@Column(columnDefinition = "VARCHAR(255)")
+	@Column(columnDefinition = "VARCHAR(255)", nullable = false)
 	private String title;
 	
-	@Column(columnDefinition = "DECIMAL")
+	@Column(columnDefinition = "DECIMAL", nullable = false)
 	private Double totalPrice;
 	
-	@Column(columnDefinition = "TEXT")
+	@Column(columnDefinition = "TEXT", nullable = false)
 	private String description;
 	
 	@ManyToOne

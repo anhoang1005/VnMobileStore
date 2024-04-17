@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
 @Table(name = "category")
 public class CategoryEntity extends BaseEntity{
 	
-	@Column(columnDefinition = "VARCHAR(100)")
+	@Column(columnDefinition = "VARCHAR(100)", nullable = false)
 	private String categoryName;
 	
 	@Column(columnDefinition = "TEXT")

@@ -27,25 +27,25 @@ public class OrderTrackingEntity {
 	@Column(columnDefinition = "VARCHAR(50)")
 	private String shippingCode;
 	
-	@Column(columnDefinition = "VARCHAR(150)")
+	@Column(columnDefinition = "VARCHAR(150)", nullable = false)
 	private String customerProvince;
 	
-	@Column(columnDefinition = "VARCHAR(150)")
+	@Column(columnDefinition = "VARCHAR(150)", nullable = false)
 	private String customerDistrict;
 	
-	@Column(columnDefinition = "VARCHAR(150)")
+	@Column(columnDefinition = "VARCHAR(150)", nullable = false)
 	private String customerWard;
 	
-	@Column(columnDefinition = "VARCHAR(150)")
+	@Column(columnDefinition = "VARCHAR(150)", nullable = false)
 	private String customerAdress;
 	
-	@Column(columnDefinition = "VARCHAR(150)")
+	@Column(columnDefinition = "VARCHAR(150)", nullable = false)
 	private String customerName;
 	
-	@Column(columnDefinition = "VARCHAR(15)")
+	@Column(columnDefinition = "VARCHAR(15)", nullable = false)
 	private String customerTelephone;
 	
-	@Column(columnDefinition = "VARCHAR(150)")
+	@Column(columnDefinition = "VARCHAR(150)", nullable = false)
 	private String customerEmail;
 	
 	@OneToOne

@@ -17,11 +17,11 @@ import com.example.ZVnMobile.repository.CategoryRepositry;
 import com.example.ZVnMobile.service.impl.ICategoryService;
 
 @Service
-public class CategoryService implements ICategoryService{
-	
+public class CategoryService implements ICategoryService {
+
 	@Autowired
 	private CategoryRepositry categoryRepositry;
-	
+
 	@Autowired
 	private CategoryConverter categoryConverter;
 
@@ -31,17 +31,24 @@ public class CategoryService implements ICategoryService{
 		List<CategoryDto> listDtos = new ArrayList<>();
 		try {
 			List<CategoryEntity> listEntities = categoryRepositry.findAll();
-			for(CategoryEntity entity : listEntities) {
+			long pageCount = 0;
+			if (categoryRepositry.count() % 10 == 0) {
+				pageCount = categoryRepositry.count() / 10;
+			} else {
+				pageCount = categoryRepositry.count() / 10 + 1;
+			}
+			for (CategoryEntity entity : listEntities) {
 				CategoryDto dto = categoryConverter.entityToDto(entity);
 				listDtos.add(dto);
 			}
 			dataResponse.setSuccess(true);
 			dataResponse.setData(listDtos);
-			dataResponse.setMessage("get thanh cong");
+			dataResponse.setPageData(pageCount);
+			dataResponse.setMessage("Lấy danh sắch category thành công!");
 		} catch (Exception e) {
-			dataResponse.setSuccess(true);
-			dataResponse.setMessage("Loi: " + e.getMessage());
-			System.out.println(e.getMessage());
+			e.printStackTrace();
+			dataResponse.setSuccess(false);
+			dataResponse.setErrorCode(e.getMessage());
 		}
 		return dataResponse;
 	}
@@ -55,9 +62,9 @@ public class CategoryService implements ICategoryService{
 			categoryEntity.setImages(categoryDto.getImages());
 			categoryEntity.setDescription(categoryDto.getDesciption());
 			categoryEntity.setDeleted(true);
-			
+
 			categoryEntity = categoryRepositry.save(categoryEntity);
-			if(categoryEntity!=null) {
+			if (categoryEntity != null) {
 				dataResponse.setData("OK");
 				dataResponse.setSuccess(true);
 				dataResponse.setMessage("Them thanh cong");
@@ -78,10 +85,10 @@ public class CategoryService implements ICategoryService{
 			categoryEntity.setCategoryName(categoryDto.getCategoryName());
 			categoryEntity.setImages(categoryDto.getImages());
 			categoryEntity.setDescription(categoryDto.getDesciption());
-			//categoryEntity.setDeleted(categoryDto.isDeleted());
-			
+			// categoryEntity.setDeleted(categoryDto.isDeleted());
+
 			categoryEntity = categoryRepositry.save(categoryEntity);
-			if(categoryEntity!=null) {
+			if (categoryEntity != null) {
 				dataResponse.setData("OK");
 				dataResponse.setMessage("Update thanh cong");
 				dataResponse.setSuccess(true);
@@ -100,14 +107,14 @@ public class CategoryService implements ICategoryService{
 		try {
 			CategoryEntity categoryEntity = categoryRepositry.findOneByCategoryName(categoryName);
 			CategoryDto categoryDto = categoryConverter.entityToDto(categoryEntity);
-			
+
 			dataResponse.setData(categoryDto);
 			dataResponse.setSuccess(true);
 		} catch (Exception e) {
 			dataResponse.setSuccess(false);
 			dataResponse.setMessage("Loi: " + e.getMessage());
 		}
-		
+
 		return dataResponse;
 	}
 
@@ -117,7 +124,7 @@ public class CategoryService implements ICategoryService{
 		try {
 			CategoryEntity categoryEntity = categoryRepositry.findOneById(id);
 			CategoryDto categoryDto = categoryConverter.entityToDto(categoryEntity);
-			
+
 			dataResponse.setData(categoryDto);
 			dataResponse.setSuccess(true);
 		} catch (Exception e) {
@@ -134,7 +141,7 @@ public class CategoryService implements ICategoryService{
 			CategoryEntity categoryEntity = categoryRepositry.findOneById(id);
 			categoryEntity.setDeleted(status);
 			categoryEntity = categoryRepositry.save(categoryEntity);
-			if(categoryEntity!=null) {
+			if (categoryEntity != null) {
 				dataResponse.setData("OK");
 				dataResponse.setSuccess(true);
 			}
@@ -143,7 +150,7 @@ public class CategoryService implements ICategoryService{
 			dataResponse.setSuccess(false);
 			dataResponse.setMessage("Error: " + e.getMessage());
 		}
-		
+
 		return dataResponse;
 	}
 
@@ -151,22 +158,45 @@ public class CategoryService implements ICategoryService{
 	public DataResponse getPageCategory(int pageNumber) {
 		DataResponse dataResponse = new DataResponse();
 		try {
-			Pageable pageable = PageRequest.of(pageNumber - 1, 3);
+			Pageable pageable = PageRequest.of(pageNumber - 1, 10);
+			long pageCount = 0;
+			if (categoryRepositry.count() % 10 == 0) {
+				pageCount = categoryRepositry.count() / 10;
+			} else {
+				pageCount = categoryRepositry.count() / 10 + 1;
+			}
 			Page<CategoryEntity> listEntity = categoryRepositry.findAll(pageable);
 			List<CategoryDto> listDto = new ArrayList<>();
-			for(CategoryEntity categoryEntity : listEntity) {
+			for (CategoryEntity categoryEntity : listEntity) {
 				CategoryDto categoryDto = new CategoryDto();
 				categoryDto = categoryConverter.entityToDto(categoryEntity);
 				listDto.add(categoryDto);
 			}
 			dataResponse.setData(listDto);
+			dataResponse.setPageData(pageCount);
 			dataResponse.setSuccess(true);
 		} catch (Exception e) {
 			dataResponse.setData("Error");
-			dataResponse.setMessage("Error: " + e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
 			dataResponse.setSuccess(true);
 		}
 		return dataResponse;
 	}
-	
+
+	@Override
+	public DataResponse getBySearch(String text) {
+		DataResponse dataResponse = new DataResponse();
+		try {
+			List<CategoryEntity> listSearch = categoryRepositry.findByCategoryNameLike(text);
+			dataResponse.setData(listSearch);
+			dataResponse.setSuccess(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			dataResponse.setMessage("Error");
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setSuccess(false);
+		}
+		return dataResponse;
+	}
+
 }

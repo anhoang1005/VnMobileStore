@@ -5,7 +5,7 @@ public class DataResponse {
 	private String message;
 	private String errorCode;
 	private Object data;
-	private Integer pageData;
+	private long pageData;
 	private boolean success;
 
 	public DataResponse() {
@@ -44,10 +44,11 @@ public class DataResponse {
 	public void setData(Object data) {
 		this.data = data;
 	}
-	public Integer getPageData() {
+	
+	public long getPageData() {
 		return pageData;
 	}
-	public void setPageData(Integer pageData) {
+	public void setPageData(long pageData) {
 		this.pageData = pageData;
 	}
 	public boolean isSuccess() {
