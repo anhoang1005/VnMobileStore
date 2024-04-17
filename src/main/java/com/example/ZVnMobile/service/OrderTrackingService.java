@@ -28,6 +28,7 @@ public class OrderTrackingService implements IOrderTrackingService{
 			isSuccess = true;
 		} catch (Exception e) {
 			System.out.println("Error: " + e.getMessage());
+			e.printStackTrace();
 		}
 		return isSuccess;
 	}

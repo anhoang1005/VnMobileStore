@@ -57,6 +57,7 @@ public class ProductInfoService implements IProductInfoService{
 		} catch (Exception e) {
 			isSuccess = false;
 			System.out.println("Error: " + e.getMessage());
+			e.printStackTrace();
 		}
 		return isSuccess;
 	}

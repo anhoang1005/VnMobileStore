@@ -31,6 +31,7 @@ public class OrderHistoryService implements IOrderHistoryService{
 		} catch (Exception e) {
 			isSuccess = false;
 			System.out.println("Error: " + e.getMessage());
+			e.printStackTrace();
 		}
 		return isSuccess;
 	}
@@ -51,6 +52,7 @@ public class OrderHistoryService implements IOrderHistoryService{
 			}
 		} catch (Exception e) {
 			isSuccess = false;
+			e.printStackTrace();
 			System.out.println("Error: " + e.getMessage());
 		}
 		return isSuccess;

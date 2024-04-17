@@ -41,6 +41,7 @@ public class OrderItemsService implements IOrderItemService{
 			isSuccess = true;
 		} catch (Exception e) {
 			isSuccess = false;
+			e.printStackTrace();
 			System.out.println("Error: " + e.getMessage());
 		}
 		return isSuccess;

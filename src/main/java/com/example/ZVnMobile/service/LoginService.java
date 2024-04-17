@@ -102,18 +102,17 @@ public class LoginService implements ILoginService {
 				entity.setVerifyCode(verifyCode);
 				entity = userRepository.save(entity);
 				dataResponse.setSuccess(true);
-				dataResponse.setMessage("Gui email xac nhan thnh cong!");
+				dataResponse.setMessage("Gửi email xác nhận thành công!");
 				dataResponse.setData(null);
 			} else {
 				dataResponse.setSuccess(false);
-				dataResponse.setMessage("Gui email xac nhan that bai!");
+				dataResponse.setMessage("Gửi email xác nhận thất bại!");
 				dataResponse.setData(null);
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
-			entity = userRepository.save(entity);
+			//entity = userRepository.save(entity);
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Loi: " + e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
 			dataResponse.setData(null);
 		}
 		return dataResponse;
@@ -139,7 +138,8 @@ public class LoginService implements ILoginService {
 			}
 		} catch (Exception e) {
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Loi: " + e.getMessage());
+			dataResponse.setMessage("Error");
+			dataResponse.setErrorCode(e.getMessage());
 		}
 		return dataResponse;
 	}

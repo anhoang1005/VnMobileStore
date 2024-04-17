@@ -58,8 +58,8 @@ public class OrderService implements IOrderService {
 			dataResponse.setData(listOrderDtos);
 			dataResponse.setSuccess(true);
 		} catch (Exception e) {
-			dataResponse.setMessage("Loi: " + e.getMessage());
-			dataResponse.setData("Loi");
+			dataResponse.setData("Error");
+			dataResponse.setErrorCode(e.getMessage());
 			dataResponse.setSuccess(false);
 		}
 		return dataResponse;
@@ -109,8 +109,8 @@ public class OrderService implements IOrderService {
 				dataResponse.setSuccess(true);
 			}
 		} catch (Exception e) {
-			dataResponse.setData("Loi");
-			dataResponse.setMessage("Loi: " + e.getMessage());
+			dataResponse.setData("Error");
+			dataResponse.setErrorCode(e.getMessage());
 			dataResponse.setSuccess(false);
 		}
 		return dataResponse;
@@ -133,7 +133,8 @@ public class OrderService implements IOrderService {
 				dataResponse.setSuccess(true);
 			}
 		} catch (Exception e) {
-			dataResponse.setMessage("Error: " + e.getMessage());
+			dataResponse.setData("Error");
+			dataResponse.setErrorCode(e.getMessage());
 			dataResponse.setSuccess(false);
 		}
 		return dataResponse;
@@ -154,11 +155,12 @@ public class OrderService implements IOrderService {
 				}
 			}
 			else {
-				dataResponse.setData("don hang da bi huy truoc do!");
+				dataResponse.setData("Đơn hàng đã bị hủy!");
 				dataResponse.setSuccess(false);
 			}
 		} catch (Exception e) {
-			dataResponse.setMessage("Error: " + e.getMessage());
+			dataResponse.setData("Error");
+			dataResponse.setErrorCode(e.getMessage());
 			dataResponse.setSuccess(false);
 		}
 		return dataResponse;

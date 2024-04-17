@@ -64,7 +64,8 @@ public class GHNService implements IGHNService {
 				dataResponse.setSuccess(false);
 			}
 		} catch (Exception e) {
-			dataResponse.setData(e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 			dataResponse.setSuccess(false);
 		}
 
@@ -98,7 +99,8 @@ public class GHNService implements IGHNService {
 				dataResponse.setSuccess(false);
 			}
 		} catch (Exception e) {
-			dataResponse.setData(e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 			dataResponse.setSuccess(false);
 		}
 
@@ -132,7 +134,8 @@ public class GHNService implements IGHNService {
 				dataResponse.setSuccess(false);
 			}
 		} catch (Exception e) {
-			dataResponse.setData(e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 			dataResponse.setSuccess(false);
 		}
 
@@ -168,7 +171,8 @@ public class GHNService implements IGHNService {
 				dataResponse.setSuccess(false);
 			}
 		} catch (Exception e) {
-			dataResponse.setData(e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 			dataResponse.setSuccess(false);
 		}
 
@@ -207,7 +211,8 @@ public class GHNService implements IGHNService {
 				dataResponse.setSuccess(false);
 			}
 		} catch (Exception e) {
-			dataResponse.setData(e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 			dataResponse.setSuccess(false);
 		}
 		return dataResponse;
@@ -246,7 +251,8 @@ public class GHNService implements IGHNService {
 				dataResponse.setSuccess(false);
 			}
 		} catch (Exception e) {
-			dataResponse.setData(e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 			dataResponse.setSuccess(false);
 		}
 		return dataResponse;

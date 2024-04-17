@@ -38,7 +38,8 @@ public class SupplierService implements ISupplierService {
 			dataResponse.setSuccess(true);
 		} catch (Exception e) {
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Loi: " + e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 		}
 
 		return dataResponse;
@@ -55,7 +56,8 @@ public class SupplierService implements ISupplierService {
 			dataResponse.setSuccess(true);
 		} catch (Exception e) {
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Loi: " + e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 		}
 		return dataResponse;
 	}
@@ -79,9 +81,9 @@ public class SupplierService implements ISupplierService {
 				dataResponse.setSuccess(true);
 			}
 		} catch (Exception e) {
-			dataResponse.setMessage("Error: " + e.getMessage());
-			dataResponse.setData("Error");
 			dataResponse.setSuccess(false);
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 		}
 		return dataResponse;
 	}
@@ -104,9 +106,9 @@ public class SupplierService implements ISupplierService {
 				dataResponse.setSuccess(true);
 			}
 		} catch (Exception e) {
-			dataResponse.setMessage("Error: " + e.getMessage());
-			dataResponse.setData("Error");
 			dataResponse.setSuccess(false);
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 		}
 		return dataResponse;
 	}
@@ -123,9 +125,9 @@ public class SupplierService implements ISupplierService {
 				dataResponse.setSuccess(true);
 			}
 		} catch (Exception e) {
-			dataResponse.setData("Error");
-			dataResponse.setMessage("Error: " + e.getMessage());
 			dataResponse.setSuccess(false);
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 		}
 		return dataResponse;
 	}

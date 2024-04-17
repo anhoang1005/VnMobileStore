@@ -59,6 +59,7 @@ public class ProductTypeService implements IProductTypeService{
 		} catch (Exception e) {
 			isSuccess = false;
 			System.out.println("Error: " + e.getMessage());
+			e.printStackTrace();
 		}
 		return isSuccess;
 	}
@@ -78,9 +79,9 @@ public class ProductTypeService implements IProductTypeService{
 				dataResponse.setSuccess(true);
 			}
 		} catch (Exception e) {
-			dataResponse.setData("Error");
-			dataResponse.setMessage("Error: " + e.getMessage());
 			dataResponse.setSuccess(false);
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 		}
 		return dataResponse;
 	}

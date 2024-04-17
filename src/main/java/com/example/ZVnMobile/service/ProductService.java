@@ -63,8 +63,9 @@ public class ProductService implements IProductService {
 			dataResponse.setData(listCardDtos);
 			dataResponse.setSuccess(true);
 		} catch (Exception e) {
-			dataResponse.setMessage("Loi: " + e.getMessage());
 			dataResponse.setSuccess(false);
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 		}
 
 		return dataResponse;
@@ -80,7 +81,8 @@ public class ProductService implements IProductService {
 			dataResponse.setSuccess(true);
 		} catch (Exception e) {
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Loi: " + e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 		}
 		return dataResponse;
 	}
@@ -94,7 +96,8 @@ public class ProductService implements IProductService {
 			dataResponse.setSuccess(true);
 		} catch (Exception e) {
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Loi: " + e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 		}
 		return dataResponse;
 	}
@@ -138,7 +141,8 @@ public class ProductService implements IProductService {
 			}
 		} catch (Exception e) {
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Loi: " + e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 		}
 		return dataResponse;
 	}
@@ -155,7 +159,8 @@ public class ProductService implements IProductService {
 			dataResponse.setSuccess(true);
 		} catch (Exception e) {
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Loi: " + e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 		}
 
 		return dataResponse;
@@ -172,7 +177,8 @@ public class ProductService implements IProductService {
 			dataResponse.setData("OK");
 		} catch (Exception e) {
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Loi: " + e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 		}
 		return dataResponse;
 	}
@@ -187,7 +193,8 @@ public class ProductService implements IProductService {
 			dataResponse.setSuccess(true);
 		} catch (Exception e) {
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Loi: " + e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 		}
 
 		return dataResponse;
@@ -209,9 +216,9 @@ public class ProductService implements IProductService {
 			dataResponse.setData(listDtos);
 			dataResponse.setSuccess(true);
 		} catch (Exception e) {
-			dataResponse.setData("Error");
-			dataResponse.setMessage("Error: " + e.getMessage());
 			dataResponse.setSuccess(false);
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 		}
 		return dataResponse;
 	}
@@ -230,9 +237,9 @@ public class ProductService implements IProductService {
 			dataResponse.setData(listDtos);
 			dataResponse.setSuccess(true);
 		} catch (Exception e) {
-			dataResponse.setData("Error");
-			dataResponse.setMessage("Error: " + e.getMessage());
 			dataResponse.setSuccess(false);
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 		}
 		return dataResponse;
 	}
@@ -249,9 +256,9 @@ public class ProductService implements IProductService {
 				dataResponse.setSuccess(true);
 			}
 		} catch (Exception e) {
-			dataResponse.setData("Error");
-			dataResponse.setMessage("Error: " + e.getMessage());
 			dataResponse.setSuccess(false);
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 		}
 		return dataResponse;
 	}

@@ -32,6 +32,7 @@ public class ProductColorService implements IProductColorService{
 		} catch (Exception e) {
 			isSuccess = false;
 			System.out.println("Error: " + e.getMessage());
+			e.printStackTrace();
 		}
 		
 		return isSuccess;

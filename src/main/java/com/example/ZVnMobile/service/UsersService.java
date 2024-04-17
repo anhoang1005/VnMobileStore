@@ -4,15 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.ZVnMobile.convert.LoginConverter;
 import com.example.ZVnMobile.convert.UsersConverter;
 import com.example.ZVnMobile.dto.UserInfoDto;
 import com.example.ZVnMobile.dto.UsersDto;
 import com.example.ZVnMobile.entities.UsersEntity;
 import com.example.ZVnMobile.payload.DataResponse;
+import com.example.ZVnMobile.payload.JwtTokenResponse;
 import com.example.ZVnMobile.payload.request.EditProfileRequest;
 import com.example.ZVnMobile.repository.UserRepository;
 import com.example.ZVnMobile.service.impl.IMailService;
@@ -22,8 +25,14 @@ import com.example.ZVnMobile.utils.UsersHelperUtils;
 @Service
 public class UsersService implements IUsersService{
 	
+	@Value("${jwt.existenceTime}")
+	private Long existenceiTime;
+	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private LoginConverter loginConverter;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -55,7 +64,7 @@ public class UsersService implements IUsersService{
 			System.out.println(e.getMessage());
 			dataResponse.setData(null);
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage(e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
 		}
 		return dataResponse;
 	}
@@ -72,11 +81,12 @@ public class UsersService implements IUsersService{
 				usersEntity.setPhoneNumber(editProfileRequest.getPhoneNumber());
 				usersEntity = userRepository.save(usersEntity);
 				
-				dataResponse.setData("ok");
+				JwtTokenResponse jwtTokenResponse = loginConverter.userEntityToJwtToken(usersEntity, existenceiTime);
+				dataResponse.setData(jwtTokenResponse);
 				dataResponse.setSuccess(true);
 			}
 		} catch (Exception e) {
-			dataResponse.setMessage("Loi " + e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
 			dataResponse.setSuccess(false);
 		}
 		
@@ -94,16 +104,19 @@ public class UsersService implements IUsersService{
 				String hashPassword = passwordEncoder.encode(newPassword);
 				usersEntity.setPassword(hashPassword);
 				usersEntity = userRepository.save(usersEntity);
+				
+				JwtTokenResponse jwtTokenResponse = loginConverter.userEntityToJwtToken(usersEntity, existenceiTime);
+				dataResponse.setData(jwtTokenResponse);
 				dataResponse.setSuccess(true);
-				dataResponse.setMessage("Doi mat khau thanh cong!");
+				dataResponse.setMessage("Đổi mật khẩu thành công!");
 			}
 			else {
 				dataResponse.setSuccess(false);
-				dataResponse.setMessage("Mat khau khong dung!");
+				dataResponse.setMessage("Mật khẩu không đúng!");
 			}
 		} catch (Exception e) {
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Loi " + e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
 		}
 		return dataResponse;
 	}
@@ -122,15 +135,15 @@ public class UsersService implements IUsersService{
 				boolean isSend = iMailService.sendFogotPasswordMail(usersEntity.getFullName(), email, verifyCode);
 				if(isSend) {
 					dataResponse.setSuccess(true);
-					dataResponse.setMessage("Gui Email xac nhan thanh cong!");
+					dataResponse.setMessage("Gửi email xác nhận thành công!");
 				}
 				else {
-					dataResponse.setMessage("Gui Email xac nhan that bai!");
+					dataResponse.setMessage("Gửi email xác nhận thất bại!");
 					dataResponse.setSuccess(false);
 				}
 			}
 		} catch (Exception e) {
-			dataResponse.setMessage("Loi: "+ e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
 			dataResponse.setSuccess(false);
 		}
 		return dataResponse;
@@ -150,15 +163,15 @@ public class UsersService implements IUsersService{
 				usersEntity = userRepository.save(usersEntity);
 				
 				dataResponse.setSuccess(true);
-				dataResponse.setMessage("Doi mat khau thanh cong!");
+				dataResponse.setMessage("Đổi mật khẩu thành công!");
 			}
 			else {
 				dataResponse.setSuccess(false);
-				dataResponse.setMessage("Verify code khong dung!");
+				dataResponse.setMessage("Mã xác nhận bạn nhập không đúng!");
 			}
 		} catch (Exception e) {
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Loi: " + e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
 		}
 		return dataResponse;
 	}
@@ -173,7 +186,7 @@ public class UsersService implements IUsersService{
 			dataResponse.setData(userInfoDto);
 			dataResponse.setSuccess(true);
 		} catch (Exception e) {
-			dataResponse.setMessage("Loi: " + e.getMessage());;
+			dataResponse.setErrorCode(e.getMessage());;
 			dataResponse.setSuccess(false);
 		}
 		return dataResponse;
@@ -186,16 +199,16 @@ public class UsersService implements IUsersService{
 			UsersEntity usersEntity = userRepository.findByEmail(email);
 			if(usersEntity==null) {
 				dataResponse.setSuccess(true);
-				dataResponse.setData("Khong ton tai!");
+				dataResponse.setData("Email này chưa tồn tại!");
 			}
 			else {
 				dataResponse.setSuccess(false);
-				dataResponse.setData("Da ton tai!");
+				dataResponse.setData("Email đã tồn tại!");
 			}
 		} catch (Exception e) {
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Loi: " + e.getMessage());
-			dataResponse.setData("Da xay ra loi!");
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setData("Error");
 		}
 		return dataResponse;
 	}
@@ -208,12 +221,12 @@ public class UsersService implements IUsersService{
 			usersEntity.setDeleted(lock);
 			usersEntity = userRepository.save(usersEntity);
 			if(usersEntity!=null) {
-				dataResponse.setData("OK");
+				dataResponse.setMessage("Cập nhật trạng thái thành công");;
 				dataResponse.setSuccess(true);
 			}
 		} catch (Exception e) {
 			dataResponse.setData("Error");
-			dataResponse.setMessage("Error: " + e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
 			dataResponse.setSuccess(false);
 		}
 		return dataResponse;
@@ -227,12 +240,12 @@ public class UsersService implements IUsersService{
 			usersEntity.setRole(role);
 			usersEntity = userRepository.save(usersEntity);
 			if(usersEntity!=null){
-				dataResponse.setData("OK");
+				dataResponse.setData("Phân quyền thành công!");
 				dataResponse.setSuccess(true);
 			}
 		} catch (Exception e) {
 			dataResponse.setData("Error");
-			dataResponse.setMessage("Error: " + e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
 			dataResponse.setSuccess(false);
 		}
 		return dataResponse;

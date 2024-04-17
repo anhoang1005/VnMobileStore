@@ -53,7 +53,8 @@ public class ProductReviewService implements IProductReviewService{
 			dataResponse.setSuccess(true);
 		} catch (Exception e) {
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Loi: " + e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 		}
 		return dataResponse;
 	}
@@ -74,7 +75,8 @@ public class ProductReviewService implements IProductReviewService{
 			dataResponse.setData(listReviewDtos);
 		} catch (Exception e) {
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Loi: " + e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 		}
 		return dataResponse;
 	}
@@ -95,7 +97,8 @@ public class ProductReviewService implements IProductReviewService{
 			dataResponse.setData(listReviewDtos);
 		} catch (Exception e) {
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Loi: " + e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 		}
 		return dataResponse;
 	}
@@ -120,7 +123,8 @@ public class ProductReviewService implements IProductReviewService{
 			dataResponse.setData("OK!");;
 		} catch (Exception e) {
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Loi: " + e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 		}
 		return dataResponse;
 	}
@@ -138,7 +142,8 @@ public class ProductReviewService implements IProductReviewService{
 			dataResponse.setData("OK");
 		} catch (Exception e) {
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Loi: " + e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 		}
 		return dataResponse;
 	}
@@ -155,7 +160,8 @@ public class ProductReviewService implements IProductReviewService{
 			}
 		} catch (Exception e) {
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Loi: " + e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 		}
 		
 		return dataResponse;
@@ -172,7 +178,8 @@ public class ProductReviewService implements IProductReviewService{
 			dataResponse.setData(reviewEntity.getLike());
 		} catch (Exception e) {
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Loi: " + e.getMessage());
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 		}
 		return dataResponse;
 	}

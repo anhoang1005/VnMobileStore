@@ -47,8 +47,9 @@ public class CategoryService implements ICategoryService {
 			dataResponse.setMessage("Lấy danh sắch category thành công!");
 		} catch (Exception e) {
 			e.printStackTrace();
-			dataResponse.setSuccess(false);
 			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
+			dataResponse.setSuccess(false);
 		}
 		return dataResponse;
 	}
@@ -70,9 +71,10 @@ public class CategoryService implements ICategoryService {
 				dataResponse.setMessage("Them thanh cong");
 			}
 		} catch (Exception e) {
-			dataResponse.setData("Loi");
+			e.printStackTrace();
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Error: " + e.getMessage());
 		}
 		return dataResponse;
 	}
@@ -94,8 +96,9 @@ public class CategoryService implements ICategoryService {
 				dataResponse.setSuccess(true);
 			}
 		} catch (Exception e) {
-			dataResponse.setData("Error");
-			dataResponse.setMessage("Error: " + e.getMessage());
+			e.printStackTrace();
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 			dataResponse.setSuccess(false);
 		}
 		return dataResponse;
@@ -111,8 +114,10 @@ public class CategoryService implements ICategoryService {
 			dataResponse.setData(categoryDto);
 			dataResponse.setSuccess(true);
 		} catch (Exception e) {
+			e.printStackTrace();
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Loi: " + e.getMessage());
 		}
 
 		return dataResponse;
@@ -128,8 +133,10 @@ public class CategoryService implements ICategoryService {
 			dataResponse.setData(categoryDto);
 			dataResponse.setSuccess(true);
 		} catch (Exception e) {
+			e.printStackTrace();
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Loi: " + e.getMessage());
 		}
 		return dataResponse;
 	}
@@ -146,9 +153,10 @@ public class CategoryService implements ICategoryService {
 				dataResponse.setSuccess(true);
 			}
 		} catch (Exception e) {
-			dataResponse.setData("Error");
+			e.printStackTrace();
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 			dataResponse.setSuccess(false);
-			dataResponse.setMessage("Error: " + e.getMessage());
 		}
 
 		return dataResponse;
@@ -176,9 +184,10 @@ public class CategoryService implements ICategoryService {
 			dataResponse.setPageData(pageCount);
 			dataResponse.setSuccess(true);
 		} catch (Exception e) {
-			dataResponse.setData("Error");
+			e.printStackTrace();
 			dataResponse.setErrorCode(e.getMessage());
-			dataResponse.setSuccess(true);
+			dataResponse.setMessage("Error");
+			dataResponse.setSuccess(false);
 		}
 		return dataResponse;
 	}
@@ -192,8 +201,8 @@ public class CategoryService implements ICategoryService {
 			dataResponse.setSuccess(true);
 		} catch (Exception e) {
 			e.printStackTrace();
-			dataResponse.setMessage("Error");
 			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
 			dataResponse.setSuccess(false);
 		}
 		return dataResponse;

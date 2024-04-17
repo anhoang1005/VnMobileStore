@@ -37,7 +37,6 @@ public class VNPayService {
 
 		// language
 		String locate = "vn";
-
 		String vnp_TxnRef = vnpayConfig.getRandomNumber(8);
 		String vnp_IpAddr = "127.0.0.1";
 		String vnp_TmnCode = vnpayConfig.vnp_TmnCode;

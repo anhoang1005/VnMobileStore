@@ -68,7 +68,7 @@ public class MailService implements IMailService{
 		    
 		    isSucess = true;
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		return isSucess;
 	}
@@ -101,7 +101,7 @@ public class MailService implements IMailService{
 		    
 		    isSucess = true;
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		return isSucess;
 	}

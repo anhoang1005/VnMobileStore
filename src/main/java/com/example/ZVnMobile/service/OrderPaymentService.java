@@ -28,7 +28,8 @@ public class OrderPaymentService implements IOrderPayMentService{
 			paymentEntity = paymentRepository.save(paymentEntity);
 			isSuccess = true;
 		} catch (Exception e) {
-			isSuccess = false;
+			e.printStackTrace();
+			System.out.println("Error: " + e.getMessage());
 		}
 		return isSuccess;
 	}
