@@ -44,7 +44,7 @@ public class WebSecurityConfig {
                                 .requestMatchers(
                                 		"/api/admin/**").hasRole("QUANLI")
                                 .requestMatchers(
-                                		"/api/customer/**").hasRole("KHACHHANG")
+                                		"/api/customer/**").hasAnyRole("KHACHHANG", "QUANLI")
                                 .anyRequest().authenticated());
 		return http.build();
 	}

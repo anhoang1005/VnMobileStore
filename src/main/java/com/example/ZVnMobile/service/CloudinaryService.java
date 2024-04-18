@@ -23,10 +23,10 @@ public class CloudinaryService {
 		DataResponse dataResponse = new DataResponse();
         try{
             Map data = this.cloudinary.uploader().upload(file.getBytes(), Map.of());
-            dataResponse.setData(data);
+            System.out.println(data.get("url"));
+            dataResponse.setData(data.get("url"));
             dataResponse.setSuccess(true);
         }catch (IOException io){
-        	dataResponse.setErrorCode(io.getMessage());
 			dataResponse.setMessage("Error");
 			dataResponse.setSuccess(false);
             dataResponse.setErrorCode(io.getMessage());

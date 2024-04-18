@@ -1,7 +1,6 @@
 package com.example.ZVnMobile.service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,13 +109,21 @@ public class ProductService implements IProductService {
 			productEntity.setTitle(insertProductRequest.getTitle());
 
 			String titleToProductSlug = insertProductRequest.getTitle().toLowerCase().replaceAll("\\s+", "-");
-			productEntity.setProductSlug(titleToProductSlug);
+			ProductEntity checkExistProduct = productRepository.findOneByProductSlug(titleToProductSlug);
+			if(checkExistProduct!=null) {
+				dataResponse.setMessage("Sản phẩm đã tồn tại!");
+				dataResponse.setSuccess(false);
+				return dataResponse;
+			}
+			else {
+				productEntity.setProductSlug(titleToProductSlug);
+			}
 
 			productEntity.setThumbnail(insertProductRequest.getThumbnail());
 			productEntity.setPrice(insertProductRequest.getPrice());
 			productEntity.setDiscount(insertProductRequest.getDiscount());
 			productEntity.setDescription(insertProductRequest.getDescription());
-			productEntity.setCreatedAt(new Date());
+			//productEntity.setCreatedAt(new Date());
 			productEntity.setDeleted(true);
 
 			CategoryEntity categoryEntity = categoryRepositry.findOneById(insertProductRequest.getCategoryId());

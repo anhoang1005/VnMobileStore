@@ -4,7 +4,6 @@ public class EditProfileRequest {
 	private String fullName;
 	private String phoneNumber;
 	private String email;
-	private String avatar;
 	public String getFullName() {
 		return fullName;
 	}
@@ -16,12 +15,6 @@ public class EditProfileRequest {
 	}
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
-	}
-	public String getAvatar() {
-		return avatar;
-	}
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
 	}
 	public String getEmail() {
 		return email;
