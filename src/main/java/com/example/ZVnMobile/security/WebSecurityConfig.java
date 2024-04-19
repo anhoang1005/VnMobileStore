@@ -40,7 +40,8 @@ public class WebSecurityConfig {
                                 		"/api/supplier/**",
                                 		"/api/product/**",
                                 		"/api/review/**",
-                                		"/api/ghn/**").permitAll()
+                                		"/api/ghn/**",
+                                		"/api/uploadfile/**").permitAll()
                                 .requestMatchers(
                                 		"/api/admin/**").hasRole("QUANLI")
                                 .requestMatchers(
@@ -56,4 +57,16 @@ public class WebSecurityConfig {
 				.roles("TEST").build();
 		return new InMemoryUserDetailsManager(admin);
 	}
+	
+//	@Bean
+//    public CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH"));
+//        configuration.addAllowedOrigin("*");
+//        configuration.addAllowedHeader("*");
+//        configuration.addAllowedMethod("*");
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
 }

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ZVnMobile.dto.SupplierDto;
+import com.example.ZVnMobile.payload.request.BillRequest;
+import com.example.ZVnMobile.service.impl.ISupplierBillService;
 import com.example.ZVnMobile.service.impl.ISupplierService;
 
 @CrossOrigin("*")
@@ -24,6 +26,9 @@ public class AdminSupplierApi {
 	
 	@Autowired
 	private ISupplierService iSupplierService;
+	
+	@Autowired
+	private ISupplierBillService iSupplierBillService;
 	
 	@GetMapping
 	public ResponseEntity<?> getAllSupplier(){
@@ -54,4 +59,11 @@ public class AdminSupplierApi {
 			@RequestParam("deleted")boolean status){
 		return new ResponseEntity<>(iSupplierService.lockOrUnlockSupplier(id, status), HttpStatus.OK);
 	}
+	
+	@PostMapping("/createbill")
+	public ResponseEntity<?> createBillSupplier(
+			@RequestBody BillRequest billRequest){
+		return new ResponseEntity<>(iSupplierBillService.createBill(billRequest), HttpStatus.OK);
+	}
+	
 }
