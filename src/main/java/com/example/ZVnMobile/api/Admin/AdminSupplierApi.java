@@ -66,4 +66,10 @@ public class AdminSupplierApi {
 		return new ResponseEntity<>(iSupplierBillService.createBill(billRequest), HttpStatus.OK);
 	}
 	
+	@GetMapping("/getbill/{pageNumber}")
+	public ResponseEntity<?> getBillSupplier(
+			@PathVariable("pageNumber") int page){
+		return new ResponseEntity<>(iSupplierBillService.getAllSupplierBill(page), HttpStatus.OK);
+	}
+
 }

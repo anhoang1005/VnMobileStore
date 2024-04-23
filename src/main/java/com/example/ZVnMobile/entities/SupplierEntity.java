@@ -2,6 +2,7 @@ package com.example.ZVnMobile.entities;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -29,10 +30,10 @@ public class SupplierEntity extends BaseEntity{
 	@Column(name = "deleted", columnDefinition = "BIT", nullable = false)
 	private boolean deleted;
 	
-	@OneToMany(mappedBy = "supplierEntityInProduct")
+	@OneToMany(mappedBy = "supplierEntityInProduct", cascade = CascadeType.ALL)
 	private List<ProductEntity> listProductEntities;
 	
-	@OneToMany(mappedBy = "supplierEntityInBill")
+	@OneToMany(mappedBy = "supplierEntityInBill", cascade = CascadeType.ALL)
 	private List<SupplierBillEntity> listSupplierBillEntities;
 
 	public String getSupplierName() {

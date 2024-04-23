@@ -2,6 +2,7 @@ package com.example.ZVnMobile.entities;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -38,10 +39,10 @@ public class UsersEntity extends BaseEntity{
 	@Column(nullable = false)
 	private boolean deleted;
 	
-	@OneToMany(mappedBy = "usersEntityInOrder")
+	@OneToMany(mappedBy = "usersEntityInOrder", cascade = CascadeType.ALL)
 	private List<OrderEntity> listOrderEntities;
 	
-	@OneToMany(mappedBy = "usersEntityInReview")
+	@OneToMany(mappedBy = "usersEntityInReview", cascade = CascadeType.ALL)
 	private List<ProductReviewEntity> listProductReviewEntities;
 
 	public String getFullName() {

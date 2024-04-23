@@ -1,6 +1,12 @@
 package com.example.ZVnMobile.api;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -33,5 +39,21 @@ public class FileApi {
             return ResponseEntity.notFound().build();
         }
 	}
+	
+	
+	@GetMapping("/viewfile/{fileName:.+}")
+    public ResponseEntity<Resource> downloadFile(
+    		@PathVariable String fileName) throws IOException{
+		Path filePath = Paths.get("./upload/bill/" + fileName);
+        
+        byte[] fileContent = Files.readAllBytes(filePath);
+        
+        ByteArrayResource resource = new ByteArrayResource(fileContent);
+        
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=" + fileName)
+                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.wordprocessingml.document"))
+                .body(resource);
+    }
 
 }

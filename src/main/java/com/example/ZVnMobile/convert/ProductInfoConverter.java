@@ -3,6 +3,7 @@ package com.example.ZVnMobile.convert;
 import org.springframework.stereotype.Component;
 
 import com.example.ZVnMobile.dto.ProductInfoDto;
+import com.example.ZVnMobile.entities.ProductEntity;
 import com.example.ZVnMobile.entities.ProductInfoEntity;
 
 @Component
@@ -21,5 +22,20 @@ public class ProductInfoConverter {
 		dto.setWeight(entity.getWeight());
 		
 		return dto;
+	}
+	
+	public ProductInfoEntity productInfoDtoToProductInfoEntity(ProductEntity productEntity, ProductInfoDto infoDto) {
+		ProductInfoEntity infoEntity = new ProductInfoEntity();
+		infoEntity.setBackCamera(infoDto.getBackCamera());
+		infoEntity.setBattery(infoDto.getBattery());
+		infoEntity.setCpu(infoDto.getCpu());
+		infoEntity.setFrontCamera(infoDto.getFrontCamera());
+		infoEntity.setGpu(infoDto.getGpu());
+		infoEntity.setOperatingSystem(infoDto.getBackCamera());
+		infoEntity.setScreen(infoDto.getScreen());
+		infoEntity.setWeight(infoDto.getWeight());
+		infoEntity.setProductEntityInInfo(productEntity);
+		
+		return infoEntity;
 	}
 }

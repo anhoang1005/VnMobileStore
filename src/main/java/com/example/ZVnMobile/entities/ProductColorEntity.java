@@ -2,6 +2,7 @@ package com.example.ZVnMobile.entities;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -27,7 +28,7 @@ public class ProductColorEntity extends BaseEntity{
 	@JoinColumn(name = "type_id")
 	private ProductTypeEntity productTypeEntityInColor;
 	
-	@OneToMany(mappedBy = "productColorEntityInItem")
+	@OneToMany(mappedBy = "productColorEntityInItem", cascade = CascadeType.ALL)
 	private List<OrderItemEntity> listOrderItemEntitiesInColor;
 
 	public String getColor() {

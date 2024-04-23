@@ -10,7 +10,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.example.ZVnMobile.convert.SupplierConverter;
 import com.example.ZVnMobile.dto.BillItemDto;
+import com.example.ZVnMobile.dto.SupplierBillDto;
 import com.example.ZVnMobile.entities.ProductColorEntity;
 import com.example.ZVnMobile.entities.ProductTypeEntity;
 import com.example.ZVnMobile.entities.SupplierBillEntity;
@@ -46,21 +48,29 @@ public class SupplierBillService implements ISupplierBillService{
 	private ProductColorRepository productColorRepository;
 	
 	@Autowired
+	private SupplierConverter supplierConverter;
+	
+	@Autowired
 	private PoiReportUtils reportUtils;
 
 	@Override
 	public DataResponse getAllSupplierBill(int pageNumber) {
 		DataResponse dataResponse = new DataResponse();
 		try {
-			Pageable pageable = PageRequest.of(pageNumber, 15);
+			Pageable pageable = PageRequest.of(pageNumber-1, 15);
 			Page<SupplierBillEntity> listBill = billRepository.findAll(pageable);
+			List<SupplierBillDto> listBillDtos = new ArrayList<>();
+			for(SupplierBillEntity billEntity : listBill) {
+				SupplierBillDto dto = supplierConverter.billEntityToBillDto(billEntity);
+				listBillDtos.add(dto);
+			}
 			long pageCount = 0;
 			if(billRepository.count()%15==0) {
 				pageCount = billRepository.count()/15;
 			} else {
-				pageCount = billRepository.count() + 1;
+				pageCount = billRepository.count()/15 + 1;
 			}
-			dataResponse.setData(listBill);
+			dataResponse.setData(listBillDtos);
 			dataResponse.setPageData(pageCount);
 			dataResponse.setMessage("Lấy data Bill thành công!");
 			dataResponse.setSuccess(true);

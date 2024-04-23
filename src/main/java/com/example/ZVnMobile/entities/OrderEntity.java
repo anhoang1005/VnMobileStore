@@ -3,6 +3,7 @@ package com.example.ZVnMobile.entities;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -33,18 +34,17 @@ public class OrderEntity extends BaseEntity{
 	@OneToMany(mappedBy = "orderEntityInHistory")
 	private List<OrderHistoryEntity> listOrderHistoryEntities;
 	
-	@OneToMany(mappedBy = "orderEntityByItem")
+	@OneToMany(mappedBy = "orderEntityByItem", cascade = CascadeType.ALL)
 	private List<OrderItemEntity> listOrderItemEntities;
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private UsersEntity usersEntityInOrder;
 	
-	@OneToOne(mappedBy = "orderEntityInPayMent")
-	//@JoinColumn(name = "payment_id", referencedColumnName = "id")
+	@OneToOne(mappedBy = "orderEntityInPayMent", cascade = CascadeType.ALL)
 	private OrderPaymentEntity orderPaymentEntityInOrder;
 	
-	@OneToOne(mappedBy = "orderEntityInTracking")
+	@OneToOne(mappedBy = "orderEntityInTracking", cascade = CascadeType.ALL)
 	private OrderTrackingEntity orderTrackingEntityInOrder;
 
 	public String getOrderCode() {

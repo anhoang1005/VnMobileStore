@@ -2,6 +2,7 @@ package com.example.ZVnMobile.entities;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -39,20 +40,20 @@ public class ProductEntity extends BaseEntity{
 	@JoinColumn(name = "category_id")
 	private CategoryEntity categoryEntityInProduct;
 	
-	@OneToMany(mappedBy = "productEntityInType")
+	@OneToMany(mappedBy = "productEntityInType", cascade =  CascadeType.ALL)
 	private List<ProductTypeEntity> listProductTypeEntities;
 	
-	@OneToMany(mappedBy = "productEntityInReview")
+	@OneToMany(mappedBy = "productEntityInReview", cascade = CascadeType.ALL)
 	private List<ProductReviewEntity> listProductReviewEntities;
 	
-	@OneToMany(mappedBy = "productEntityInThumbnail")
+	@OneToMany(mappedBy = "productEntityInThumbnail", cascade = CascadeType.ALL)
 	private List<ProductThumbnailEntity> listProductThumbnailEntities;
 	
 	@ManyToOne
 	@JoinColumn(name = "supplier_id")
 	private SupplierEntity supplierEntityInProduct;
 
-	@OneToOne(mappedBy = "productEntityInInfo")
+	@OneToOne(mappedBy = "productEntityInInfo", cascade = CascadeType.ALL)
 	private ProductInfoEntity productInfoEntityInProduct;
 
 	public String getTitle() {

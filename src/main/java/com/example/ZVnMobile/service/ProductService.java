@@ -8,8 +8,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.ZVnMobile.convert.ProductConvertter;
+import com.example.ZVnMobile.convert.ProductInfoConverter;
+import com.example.ZVnMobile.convert.ProductTypeConverter;
 import com.example.ZVnMobile.dto.ProductCardDto;
 import com.example.ZVnMobile.dto.ProductDashBoardDto;
 import com.example.ZVnMobile.dto.ProductDetailDto;
@@ -18,15 +21,16 @@ import com.example.ZVnMobile.dto.ProductOfSupplierDto;
 import com.example.ZVnMobile.dto.ProductTypeDto;
 import com.example.ZVnMobile.entities.CategoryEntity;
 import com.example.ZVnMobile.entities.ProductEntity;
+import com.example.ZVnMobile.entities.ProductInfoEntity;
+import com.example.ZVnMobile.entities.ProductThumbnailEntity;
+import com.example.ZVnMobile.entities.ProductTypeEntity;
 import com.example.ZVnMobile.entities.SupplierEntity;
 import com.example.ZVnMobile.payload.DataResponse;
 import com.example.ZVnMobile.payload.request.InsertProductRequest;
 import com.example.ZVnMobile.repository.CategoryRepositry;
 import com.example.ZVnMobile.repository.ProductRepository;
 import com.example.ZVnMobile.repository.SupplierRepository;
-import com.example.ZVnMobile.service.impl.IProductInfoService;
 import com.example.ZVnMobile.service.impl.IProductService;
-import com.example.ZVnMobile.service.impl.IProductTypeService;
 
 @Service
 public class ProductService implements IProductService {
@@ -42,11 +46,15 @@ public class ProductService implements IProductService {
 
 	@Autowired
 	private SupplierRepository supplierRepository;
-	
+
 	@Autowired
-	private IProductInfoService infoService;
-	
-	@Autowired IProductTypeService typeService;
+	private CloudinaryService cloudinaryService;
+
+	@Autowired
+	private ProductInfoConverter infoConverter;
+
+	@Autowired
+	private ProductTypeConverter typeConverter;
 
 	@Override
 	public DataResponse getAllProductCard(int pageNumber) {
@@ -110,12 +118,11 @@ public class ProductService implements IProductService {
 
 			String titleToProductSlug = insertProductRequest.getTitle().toLowerCase().replaceAll("\\s+", "-");
 			ProductEntity checkExistProduct = productRepository.findOneByProductSlug(titleToProductSlug);
-			if(checkExistProduct!=null) {
+			if (checkExistProduct != null) {
 				dataResponse.setMessage("Sản phẩm đã tồn tại!");
 				dataResponse.setSuccess(false);
 				return dataResponse;
-			}
-			else {
+			} else {
 				productEntity.setProductSlug(titleToProductSlug);
 			}
 
@@ -123,29 +130,97 @@ public class ProductService implements IProductService {
 			productEntity.setPrice(insertProductRequest.getPrice());
 			productEntity.setDiscount(insertProductRequest.getDiscount());
 			productEntity.setDescription(insertProductRequest.getDescription());
-			//productEntity.setCreatedAt(new Date());
 			productEntity.setDeleted(true);
 
 			CategoryEntity categoryEntity = categoryRepositry.findOneById(insertProductRequest.getCategoryId());
 			SupplierEntity supplierEntity = supplierRepository.findOneById(insertProductRequest.getSupplierId());
 			productEntity.setCategoryEntityInProduct(categoryEntity);
 			productEntity.setSupplierEntityInProduct(supplierEntity);
+
+			ProductInfoEntity infoEntity = infoConverter.productInfoDtoToProductInfoEntity(productEntity,
+					insertProductRequest.getProductInfo());
+			productEntity.setProductInfoEntityInProduct(infoEntity);
+
+			List<ProductTypeEntity> listTypeEntities = new ArrayList<>();
+			for (ProductTypeDto typeDto : insertProductRequest.getListProdductType()) {
+				ProductTypeEntity typeEntity = typeConverter.productTypeDtoToProductTypeEntity(productEntity, typeDto);
+				listTypeEntities.add(typeEntity);
+			}
+			productEntity.setListProductTypeEntities(listTypeEntities);
+
 			productEntity = productRepository.save(productEntity);
-			
-			boolean isInsertInfo = infoService.insertProductInfo(productEntity, insertProductRequest.getProductInfo());
-			boolean isInsertListType = true;
-			for(ProductTypeDto typeDto : insertProductRequest.getListProdductType()) {
-				boolean isInsertType = typeService.insertProductType(productEntity, typeDto);
-				if(isInsertType == false) {
-					isInsertListType = false;
-					break;
+			dataResponse.setSuccess(true);
+			dataResponse.setMessage("Them san pham " + productEntity.getId() + " thanh cong");
+		} catch (Exception e) {
+			dataResponse.setSuccess(false);
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
+		}
+		return dataResponse;
+	}
+
+	@Override
+	public DataResponse insertProductWithThumbnail(MultipartFile file, List<MultipartFile> listFile,
+			InsertProductRequest insertProductRequest) {
+		DataResponse dataResponse = new DataResponse();
+		try {
+			ProductEntity productEntity = new ProductEntity();
+			productEntity.setTitle(insertProductRequest.getTitle());
+
+			String titleToProductSlug = insertProductRequest.getTitle().toLowerCase().replaceAll("\\s+", "-");
+			ProductEntity checkExistProduct = productRepository.findOneByProductSlug(titleToProductSlug);
+			if (checkExistProduct != null) {
+				dataResponse.setMessage("Sản phẩm đã tồn tại!");
+				dataResponse.setSuccess(false);
+				return dataResponse;
+			} else {
+				productEntity.setProductSlug(titleToProductSlug);
+			}
+			DataResponse response = cloudinaryService.upload(file);
+			if (response.isSuccess() == true) {
+				productEntity.setThumbnail((String) response.getData());
+			} else {
+				dataResponse.setMessage("Lỗi upload ảnh!");
+				dataResponse.setSuccess(false);
+				return dataResponse;
+			}
+			productEntity.setPrice(insertProductRequest.getPrice());
+			productEntity.setDiscount(insertProductRequest.getDiscount());
+			productEntity.setDescription(insertProductRequest.getDescription());
+			productEntity.setDeleted(true);
+
+			CategoryEntity categoryEntity = categoryRepositry.findOneById(insertProductRequest.getCategoryId());
+			SupplierEntity supplierEntity = supplierRepository.findOneById(insertProductRequest.getSupplierId());
+			productEntity.setCategoryEntityInProduct(categoryEntity);
+			productEntity.setSupplierEntityInProduct(supplierEntity);
+
+			ProductInfoEntity infoEntity = infoConverter.productInfoDtoToProductInfoEntity(productEntity,
+					insertProductRequest.getProductInfo());
+			productEntity.setProductInfoEntityInProduct(infoEntity);
+
+			List<ProductTypeEntity> listTypeEntities = new ArrayList<>();
+			for (ProductTypeDto typeDto : insertProductRequest.getListProdductType()) {
+				ProductTypeEntity typeEntity = typeConverter.productTypeDtoToProductTypeEntity(productEntity, typeDto);
+				listTypeEntities.add(typeEntity);
+			}
+			productEntity.setListProductTypeEntities(listTypeEntities);
+			System.out.println(listFile.size());
+			System.out.println(listFile);
+			List<ProductThumbnailEntity> listThumbnailEntities = new ArrayList<>();
+			for (MultipartFile image : listFile) {
+				DataResponse urlImage = cloudinaryService.upload(image);
+				if (urlImage.isSuccess()) {
+					ProductThumbnailEntity entity = new ProductThumbnailEntity();
+					entity.setThumbnail((String) response.getData());
+					entity.setProductEntityInThumbnail(productEntity);
+					listThumbnailEntities.add(entity);
 				}
 			}
-			
-			if (productEntity.getId() != null && isInsertInfo==true && isInsertListType == true) {
-				dataResponse.setData("Thêm sản phẩm " + productEntity.getId() + " thanh cong!");
-				dataResponse.setSuccess(true);
-			}
+			productEntity.setListProductThumbnailEntities(listThumbnailEntities);
+
+			productEntity = productRepository.save(productEntity);
+			dataResponse.setSuccess(true);
+			dataResponse.setMessage("Them san pham " + productEntity.getId() + " thanh cong");
 		} catch (Exception e) {
 			dataResponse.setSuccess(false);
 			dataResponse.setErrorCode(e.getMessage());
@@ -212,11 +287,11 @@ public class ProductService implements IProductService {
 		DataResponse dataResponse = new DataResponse();
 		try {
 			Pageable pageable = PageRequest.of(pageNumber - 1, 15);
-			
+
 			SupplierEntity supplierEntity = supplierRepository.findOneById(id);
 			Page<ProductEntity> listProduct = productRepository.findBySupplierEntityInProduct(supplierEntity, pageable);
 			List<ProductOfSupplierDto> listDtos = new ArrayList<>();
-			for(ProductEntity entity : listProduct) {
+			for (ProductEntity entity : listProduct) {
 				ProductOfSupplierDto dto = productConvertter.entityToProductSupplierDto(entity);
 				listDtos.add(dto);
 			}
@@ -233,11 +308,11 @@ public class ProductService implements IProductService {
 	@Override
 	public DataResponse getProductDashboard(int pageNumber) {
 		DataResponse dataResponse = new DataResponse();
-		Pageable pageable = PageRequest.of(pageNumber-1, 15);
+		Pageable pageable = PageRequest.of(pageNumber - 1, 15);
 		try {
 			Page<ProductEntity> listEntities = productRepository.findAll(pageable);
 			List<ProductDashBoardDto> listDtos = new ArrayList<>();
-			for(ProductEntity entity : listEntities) {
+			for (ProductEntity entity : listEntities) {
 				ProductDashBoardDto dto = productConvertter.entityToProductDashBoardDto(entity);
 				listDtos.add(dto);
 			}
@@ -256,7 +331,7 @@ public class ProductService implements IProductService {
 		DataResponse dataResponse = new DataResponse();
 		try {
 			ProductEntity productEntity = productRepository.findOneById(id);
-			if(productEntity!=null) {
+			if (productEntity != null) {
 				productEntity.setDeleted(deleted);
 				productEntity = productRepository.save(productEntity);
 				dataResponse.setData("OK");
@@ -269,5 +344,4 @@ public class ProductService implements IProductService {
 		}
 		return dataResponse;
 	}
-
 }

@@ -2,6 +2,7 @@ package com.example.ZVnMobile.entities;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -23,7 +24,7 @@ public class CategoryEntity extends BaseEntity{
 	@Column(columnDefinition = "BIT")
 	private boolean deleted;
 	
-	@OneToMany(mappedBy = "categoryEntityInProduct")
+	@OneToMany(mappedBy = "categoryEntityInProduct", cascade = CascadeType.ALL)
 	private List<ProductEntity> listProductEntities;
 
 	public String getCategoryName() {

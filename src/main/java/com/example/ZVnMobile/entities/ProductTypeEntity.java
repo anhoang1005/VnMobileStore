@@ -2,6 +2,7 @@ package com.example.ZVnMobile.entities;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -33,7 +34,7 @@ public class ProductTypeEntity extends BaseEntity{
 	@JoinColumn(name = "product_id")
 	private ProductEntity productEntityInType;
 
-	@OneToMany(mappedBy = "productTypeEntityInColor")
+	@OneToMany(mappedBy = "productTypeEntityInColor", cascade = CascadeType.ALL)
 	private List<ProductColorEntity> listTypeColorEntities;
 
 	public Integer getRam() {
