@@ -97,7 +97,7 @@ public class SupplierBillService implements ISupplierBillService{
 			if(user!=null && supplier!=null && supplier.isDeleted()==true && user.isDeleted()==true ) {
 				SupplierBillEntity billEntity = new SupplierBillEntity();
 				billEntity.setSupplierEntityInBill(supplier);
-				billEntity.setTitle("Hóa đơn nhập hàng " + supplier.getSupplierName());
+				billEntity.setTitle("Phiếu nhập hàng " + supplier.getSupplierName());
 				Double totalPrice = 0.0;
 				List<BillItemDto> listItemDtos = new ArrayList<>();
 				for(BillItemsRequest item : bill.getListBillItems()) {

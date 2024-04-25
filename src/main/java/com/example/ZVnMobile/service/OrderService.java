@@ -9,11 +9,16 @@ import org.springframework.stereotype.Service;
 
 import com.example.ZVnMobile.convert.OrderConverter;
 import com.example.ZVnMobile.dto.OrderDto;
+import com.example.ZVnMobile.dto.OrderItemsDto;
 import com.example.ZVnMobile.entities.OrderEntity;
+import com.example.ZVnMobile.entities.OrderHistoryEntity;
+import com.example.ZVnMobile.entities.OrderItemEntity;
+import com.example.ZVnMobile.entities.ProductColorEntity;
 import com.example.ZVnMobile.entities.UsersEntity;
 import com.example.ZVnMobile.payload.DataResponse;
 import com.example.ZVnMobile.payload.request.CheckOutRequest;
 import com.example.ZVnMobile.repository.OrderRepository;
+import com.example.ZVnMobile.repository.ProductColorRepository;
 import com.example.ZVnMobile.repository.UserRepository;
 import com.example.ZVnMobile.service.impl.IOrderHistoryService;
 import com.example.ZVnMobile.service.impl.IOrderItemService;
@@ -44,6 +49,9 @@ public class OrderService implements IOrderService {
 
 	@Autowired
 	private IOrderItemService iOrderItemService;
+	
+	@Autowired
+	private ProductColorRepository colorRepository;
 
 	@Override
 	public DataResponse getAllOrder() {
@@ -94,7 +102,8 @@ public class OrderService implements IOrderService {
 			orderEntity.setCreatedAt(new Date());
 			orderEntity.setStatus("Chờ xác nhận");
 			orderEntity.setTotalPrice(checkOutRequest.getTotalPrice());
-			// Luu Order moi vao csdl
+			orderEntity.setOrderCode("#DH000" + "TEST");
+
 			orderEntity = orderRepository.save(orderEntity);
 
 			boolean isTrackingSuccess = iTrackingService.insertTracking(orderEntity,
@@ -108,6 +117,56 @@ public class OrderService implements IOrderService {
 				dataResponse.setData("OK");
 				dataResponse.setSuccess(true);
 			}
+		} catch (Exception e) {
+			dataResponse.setData("Error");
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setSuccess(false);
+		}
+		return dataResponse;
+	}
+
+	@Override
+	public DataResponse insertOrderTest(CheckOutRequest checkOutRequest) {
+		DataResponse dataResponse = new DataResponse();
+		try {
+			OrderEntity orderEntity = new OrderEntity();
+			UsersEntity usersEntity = userRepository.findByEmail(checkOutRequest.getEmail());
+			orderEntity.setUsersEntityInOrder(usersEntity);
+			orderEntity.setCustomerNote(checkOutRequest.getCustomerNote());
+			orderEntity.setCreatedAt(new Date());
+			orderEntity.setStatus("Chờ xác nhận");
+			orderEntity.setTotalPrice(checkOutRequest.getTotalPrice());
+			orderEntity.setOrderCode("#DH000");
+
+			orderEntity.setOrderTrackingEntityInOrder(orderConverter.orderTrackingDtoToOrderTrackingEntity(orderEntity, checkOutRequest.getOrderTracking()));
+			orderEntity.setOrderPaymentEntityInOrder(orderConverter.orderPaymentDtoToEntity(orderEntity, checkOutRequest.getOrderPayment()));
+			
+			List<OrderHistoryEntity> listOrderHistoryEntities = new ArrayList<>();
+			OrderHistoryEntity firstHistoryEntity = new OrderHistoryEntity();
+			firstHistoryEntity.setEvent("Khởi tạo đơn hàng");
+			firstHistoryEntity.setEventDes("Đơn hàng được bạn tạo!");
+			firstHistoryEntity.setOrderEntityInHistory(orderEntity);
+			listOrderHistoryEntities.add(firstHistoryEntity);
+			orderEntity.setListOrderHistoryEntities(listOrderHistoryEntities);
+			
+			List<OrderItemEntity> listOrderItemEntities = new ArrayList<>();
+			for(OrderItemsDto itemsDto : checkOutRequest.getListItem()) {
+				ProductColorEntity colorEntity = colorRepository.findOneById(itemsDto.getOrderColorId());
+				OrderItemEntity itemEntity = orderConverter.orderItemDtoToOrderItemEntity(orderEntity, colorEntity, itemsDto);
+				listOrderItemEntities.add(itemEntity);
+			}
+			orderEntity.setListOrderItemEntities(listOrderItemEntities);
+
+			orderEntity = orderRepository.save(orderEntity);
+			
+			if(orderEntity!=null) {
+				orderEntity.setOrderCode("#DH000" + orderEntity.getId());
+				orderEntity = orderRepository.save(orderEntity);
+				dataResponse.setMessage("Thêm đơn hàng " + orderEntity.getId() + " thành công!");
+				dataResponse.setData("OK");
+				dataResponse.setSuccess(true);
+			}
+			
 		} catch (Exception e) {
 			dataResponse.setData("Error");
 			dataResponse.setErrorCode(e.getMessage());
@@ -153,8 +212,7 @@ public class OrderService implements IOrderService {
 					dataResponse.setData(orderEntity.getStatus());
 					dataResponse.setSuccess(true);
 				}
-			}
-			else {
+			} else {
 				dataResponse.setData("Đơn hàng đã bị hủy!");
 				dataResponse.setSuccess(false);
 			}
@@ -165,4 +223,5 @@ public class OrderService implements IOrderService {
 		}
 		return dataResponse;
 	}
+
 }

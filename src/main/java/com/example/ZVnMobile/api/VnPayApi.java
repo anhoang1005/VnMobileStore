@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ZVnMobile.service.VNPayService;
@@ -21,7 +22,8 @@ public class VnPayApi {
 	private VNPayService vnpayService;
 	
 	@PostMapping("/create")
-	public ResponseEntity<?> createPayment() throws UnsupportedEncodingException{
-		return new ResponseEntity<>(vnpayService.createPayment(1000000000, "Thanh toan don hang!"), HttpStatus.OK);
+	public ResponseEntity<?> createPayment(
+			@RequestParam("total") long total) throws UnsupportedEncodingException{
+		return new ResponseEntity<>(vnpayService.createPayment(total, "THANH TOÁN ĐƠN HÀNG VNMOBILE"), HttpStatus.OK);
 	}
 }

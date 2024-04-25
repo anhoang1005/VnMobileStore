@@ -33,7 +33,7 @@ public class VNPayService {
 		orderType = "other";
 		
 		// Price don hang
-		long amount = total * 100;
+		long amount = total*100;
 
 		// language
 		String locate = "vn";

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -104,7 +105,7 @@ public class PoiReportUtils {
 			runthis.setColor("FF0000");
 			runthis.setText("CỬA HÀNG ĐIỆN THOẠI VNMOBILE");
 			runthis.addTab(); runthis.addTab(); runthis.addTab();
-			runthis.setText("   HÓA ĐƠN NHẬP HÀNG");
+			runthis.setText("     PHIẾU NHẬP HÀNG");
 			
 			LocalDate now = LocalDate.now();
 			String nowString = "Hà Nội, Ngày " + now.getDayOfMonth() + " tháng " + now.getMonthValue() + " năm "
@@ -129,7 +130,7 @@ public class PoiReportUtils {
 			runthis = parag.createRun();
 			runthis.setFontSize(13);
 			runthis.addBreak();
-			runthis.setText("Người tạo hóa đơn: " + user.getFullName());
+			runthis.setText("Người tạo phiếu: " + user.getFullName());
 			runthis.addBreak();
 			runthis.setText("Số điện thoại: " + user.getPhoneNumber());
 			runthis.addBreak();
@@ -207,6 +208,8 @@ public class PoiReportUtils {
 			run.setBold(true);
 			run.setText("Thành tiền");
 			
+			DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+			
 			Double totalPrice = 0.0;
 			for (int i = 0; i < listItem.size(); i++) {
 				XWPFTableRow row1 = table.createRow();
@@ -216,8 +219,12 @@ public class PoiReportUtils {
 				row1.getCell(3).setText(listItem.get(i).getVersion());
 				row1.getCell(4).setText(listItem.get(i).getColor());
 				row1.getCell(5).setText(String.valueOf(listItem.get(i).getQuantity()));
-				row1.getCell(6).setText(String.format("%.0f", listItem.get(i).getBasePrice()));
-				row1.getCell(7).setText(String.format("%.0f", listItem.get(i).getQuantity()*listItem.get(i).getBasePrice()));
+				
+				String basePriceFormat = decimalFormat.format(listItem.get(i).getBasePrice());
+				String sumPrice = decimalFormat.format(listItem.get(i).getQuantity()*listItem.get(i).getBasePrice());
+				
+				row1.getCell(6).setText(basePriceFormat + "đ");
+				row1.getCell(7).setText(sumPrice + "đ");
 				totalPrice = totalPrice + listItem.get(i).getQuantity()*listItem.get(i).getBasePrice();
 			}
 			XWPFTableRow row1 = table.createRow();
@@ -234,11 +241,13 @@ public class PoiReportUtils {
 			run62.setBold(true);
 			run62.setText("TỔNG CỘNG");
 			
+			String totalPriceFormat = decimalFormat.format(totalPrice);
+			
 			XWPFTableCell cell72 = row2.getCell(7);
 			XWPFParagraph para72 = cell72.getParagraphs().get(0);
 			XWPFRun run72 = para72.createRun();
 			run72.setBold(true);
-			run72.setText(String.format("%.0f", totalPrice));
+			run72.setText(totalPriceFormat + "đ");
 			
 			parag = document.createParagraph();
 			parag.setAlignment(ParagraphAlignment.LEFT);

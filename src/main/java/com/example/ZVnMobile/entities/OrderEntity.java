@@ -31,7 +31,7 @@ public class OrderEntity extends BaseEntity{
 	@Column(columnDefinition = "TIMESTAMP")
 	private Date deliveryAt;
 	
-	@OneToMany(mappedBy = "orderEntityInHistory")
+	@OneToMany(mappedBy = "orderEntityInHistory", cascade = CascadeType.ALL)
 	private List<OrderHistoryEntity> listOrderHistoryEntities;
 	
 	@OneToMany(mappedBy = "orderEntityByItem", cascade = CascadeType.ALL)

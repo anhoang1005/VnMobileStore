@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.example.ZVnMobile.convert.ProductTypeConverter;
 import com.example.ZVnMobile.dto.ProductColorDto;
 import com.example.ZVnMobile.dto.ProductTypeDto;
-import com.example.ZVnMobile.entities.ProductColorEntity;
 import com.example.ZVnMobile.entities.ProductEntity;
 import com.example.ZVnMobile.entities.ProductTypeEntity;
 import com.example.ZVnMobile.payload.DataResponse;

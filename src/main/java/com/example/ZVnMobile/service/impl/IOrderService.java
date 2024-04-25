@@ -9,6 +9,7 @@ public interface IOrderService {
 	DataResponse getOrderByUserId(Long userId);
 	DataResponse getOrderById();
 	DataResponse insertOrder(CheckOutRequest checkOutRequest);
+	DataResponse insertOrderTest(CheckOutRequest checkOutRequest);
 	DataResponse updateOrder(Long orderId ,String status);
 	DataResponse cancelOrder(Long orderId, String email);
 }

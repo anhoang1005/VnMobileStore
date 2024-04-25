@@ -21,7 +21,6 @@ public class OrderHistoryService implements IOrderHistoryService{
 			OrderHistoryEntity historyEntity = new OrderHistoryEntity();
 			historyEntity.setEvent("Đơn hàng được tạo");
 			historyEntity.setEventDes("Đơn hàng được bạn tạo vào " + orderEntity.getCreatedAt());
-			historyEntity.setCreatedAt(orderEntity.getCreatedAt());
 			historyEntity.setOrderEntityInHistory(orderEntity);
 			historyEntity = historyRepository.save(historyEntity);
 			

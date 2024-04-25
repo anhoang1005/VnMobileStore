@@ -15,6 +15,7 @@ import com.example.ZVnMobile.entities.OrderHistoryEntity;
 import com.example.ZVnMobile.entities.OrderItemEntity;
 import com.example.ZVnMobile.entities.OrderPaymentEntity;
 import com.example.ZVnMobile.entities.OrderTrackingEntity;
+import com.example.ZVnMobile.entities.ProductColorEntity;
 
 @Component
 public class OrderConverter {
@@ -78,6 +79,24 @@ public class OrderConverter {
 		dto.setCustomerProvince(entity.getCustomerProvince());
 		return dto;
 	}
+	
+	public OrderTrackingEntity orderTrackingDtoToOrderTrackingEntity(OrderEntity orderEntity, OrderTrackingDto dto) {
+		OrderTrackingEntity entity = new OrderTrackingEntity();
+		entity.setCarrier(dto.getCarrier());
+		entity.setFee(dto.getFee());
+		entity.setShippingCode(dto.getShippingCode());
+		entity.setUrl(dto.getUrl());
+		entity.setCustomerName(dto.getCustomerName());
+		entity.setCustomerTelephone(dto.getCustomerTelephone());
+		entity.setCustomerEmail(dto.getCustomerEmail());
+		entity.setCustomerAdress(dto.getCustomerAdress());
+		entity.setCustomerWard(dto.getCustomerWard());
+		entity.setCustomerDistrict(dto.getCustomerDistrict());
+		entity.setCustomerProvince(dto.getCustomerProvince());
+		entity.setOrderEntityInTracking(orderEntity);
+		
+		return entity;
+	}
 
 	public OrderPaymentDto orderPaymentEntityToDto(OrderPaymentEntity entity) {
 		OrderPaymentDto dto = new OrderPaymentDto();
@@ -124,5 +143,17 @@ public class OrderConverter {
 		paymentEntity.setStatus(paymentDto.getStatus());
 		paymentEntity.setOrderEntityInPayMent(orderEntity);
 		return paymentEntity;
+	}
+	
+	public OrderItemEntity orderItemDtoToOrderItemEntity(OrderEntity orderEntity, ProductColorEntity productColorEntity, OrderItemsDto dto) {
+		OrderItemEntity entity = new OrderItemEntity();
+		entity.setColor(dto.getColor());
+		entity.setPrice(dto.getPrice());
+		entity.setQuantity(dto.getQuantity());
+		entity.setTotalPrice((Double)dto.getPrice()*dto.getQuantity());
+		entity.setOrderEntityByItem(orderEntity);
+		entity.setProductColorEntityInItem(productColorEntity);
+		
+		return entity;
 	}
 }
