@@ -5,10 +5,12 @@ import java.util.Date;
 public class OrderDto {
 	private Long orderId;
 	private Long userId;
+	private String orderCode;
 	private String customerNote;
 	private Double totalPrice;
 	private String status;
 	private Date createdAt;
+	private String createdBy;
 	private Date updatedAt;
 	private Date deliveryAt;
 	private Object orderTracking;
@@ -86,5 +88,17 @@ public class OrderDto {
 	}
 	public void setOrderItems(Object orderItems) {
 		this.orderItems = orderItems;
+	}
+	public String getOrderCode() {
+		return orderCode;
+	}
+	public void setOrderCode(String orderCode) {
+		this.orderCode = orderCode;
+	}
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 }

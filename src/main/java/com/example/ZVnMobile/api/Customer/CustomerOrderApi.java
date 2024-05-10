@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,5 +39,14 @@ public class CustomerOrderApi {
 	public ResponseEntity<?> insertTestOrder(
 			@RequestBody CheckOutRequest checkOutRequest){
 		return new ResponseEntity<>(orderService.insertOrderTest(checkOutRequest), HttpStatus.OK);
+	}
+	
+	@GetMapping("/getorderuser")
+	public ResponseEntity<?> getUserOrder(
+			@RequestParam("email") String email,
+			@RequestParam("status") String status,
+			@RequestParam("pageNumber") int pageNumber){
+		System.out.println(email + " " + status + " " + pageNumber);
+		return new ResponseEntity<>(orderService.getOrderByUser(email, status, pageNumber), HttpStatus.OK);
 	}
 }

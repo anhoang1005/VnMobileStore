@@ -24,10 +24,12 @@ public class OrderConverter {
 		OrderDto dto = new OrderDto();
 		dto.setOrderId(entity.getId());
 		dto.setUserId(entity.getUsersEntityInOrder().getId());
+		dto.setOrderCode(entity.getOrderCode());
 		dto.setCustomerNote(entity.getCustomerNote());
 		dto.setTotalPrice(entity.getTotalPrice());
 		dto.setStatus(entity.getStatus());
 		dto.setCreatedAt(entity.getCreatedAt());
+		dto.setCreatedBy(entity.getCreatedBy());
 		dto.setUpdatedAt(entity.getModifiedAt());
 		dto.setDeliveryAt(entity.getDeliveryAt());
 
@@ -60,6 +62,10 @@ public class OrderConverter {
 		dto.setTotalPrice(entity.getTotalPrice());
 		dto.setOrderColorId(entity.getProductColorEntityInItem().getId());
 		dto.setColor(entity.getProductColorEntityInItem().getColor());
+		dto.setThumbnail(entity.getProductColorEntityInItem().getProductTypeEntityInColor().getProductEntityInType().getThumbnail());
+		dto.setTitle(entity.getProductColorEntityInItem().getProductTypeEntityInColor().getProductEntityInType().getTitle());
+		dto.setVersion(entity.getProductColorEntityInItem().getProductTypeEntityInColor().getRam() 
+				+ "GB-" + entity.getProductColorEntityInItem().getProductTypeEntityInColor().getRoom() + "GB");
 		return dto;
 	}
 

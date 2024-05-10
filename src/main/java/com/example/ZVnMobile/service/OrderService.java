@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.ZVnMobile.convert.OrderConverter;
@@ -49,20 +52,31 @@ public class OrderService implements IOrderService {
 
 	@Autowired
 	private IOrderItemService iOrderItemService;
-	
+
 	@Autowired
 	private ProductColorRepository colorRepository;
 
 	@Override
-	public DataResponse getAllOrder() {
+	public DataResponse getAllOrder(int pageNumber) {
 		DataResponse dataResponse = new DataResponse();
 		List<OrderDto> listOrderDtos = new ArrayList<>();
 		try {
-			List<OrderEntity> listOrderEntities = orderRepository.findAll();
+			Pageable pageable = PageRequest.of(pageNumber - 1, 5);
+			Page<OrderEntity> listOrderEntities = orderRepository.findAll(pageable);
+			long pageCount = 0;
+			long pageTotal = orderRepository.count();
+			if (orderRepository.count() % 10 == 0) {
+				pageCount = pageTotal / 10;
+			} else {
+				pageCount = pageTotal / 10 + 1;
+			}
+
 			for (OrderEntity orderEntity : listOrderEntities) {
 				OrderDto orderDto = orderConverter.OrderEntityToOrderDto(orderEntity);
 				listOrderDtos.add(orderDto);
 			}
+			dataResponse.setMessage("Success!");
+			dataResponse.setPageData(pageCount);
 			dataResponse.setData(listOrderDtos);
 			dataResponse.setSuccess(true);
 		} catch (Exception e) {
@@ -86,9 +100,20 @@ public class OrderService implements IOrderService {
 	}
 
 	@Override
-	public DataResponse getOrderById() {
-		// TODO Auto-generated method stub
-		return null;
+	public DataResponse getOrderById(Long id) {
+		DataResponse dataResponse = new DataResponse();
+		try {
+			OrderEntity orderEntity = orderRepository.findOneById(id);
+			OrderDto orderDto = orderConverter.OrderEntityToOrderDto(orderEntity);
+			dataResponse.setData(orderDto);
+			dataResponse.setSuccess(true);
+			dataResponse.setMessage("Get thành công!");
+		} catch (Exception e) {
+			dataResponse.setMessage("Error");
+			dataResponse.setSuccess(false);
+			dataResponse.setErrorCode(e.getMessage());
+		}
+		return dataResponse;
 	}
 
 	@Override
@@ -138,9 +163,11 @@ public class OrderService implements IOrderService {
 			orderEntity.setTotalPrice(checkOutRequest.getTotalPrice());
 			orderEntity.setOrderCode("#DH000");
 
-			orderEntity.setOrderTrackingEntityInOrder(orderConverter.orderTrackingDtoToOrderTrackingEntity(orderEntity, checkOutRequest.getOrderTracking()));
-			orderEntity.setOrderPaymentEntityInOrder(orderConverter.orderPaymentDtoToEntity(orderEntity, checkOutRequest.getOrderPayment()));
-			
+			orderEntity.setOrderTrackingEntityInOrder(orderConverter.orderTrackingDtoToOrderTrackingEntity(orderEntity,
+					checkOutRequest.getOrderTracking()));
+			orderEntity.setOrderPaymentEntityInOrder(
+					orderConverter.orderPaymentDtoToEntity(orderEntity, checkOutRequest.getOrderPayment()));
+
 			List<OrderHistoryEntity> listOrderHistoryEntities = new ArrayList<>();
 			OrderHistoryEntity firstHistoryEntity = new OrderHistoryEntity();
 			firstHistoryEntity.setEvent("Khởi tạo đơn hàng");
@@ -148,25 +175,26 @@ public class OrderService implements IOrderService {
 			firstHistoryEntity.setOrderEntityInHistory(orderEntity);
 			listOrderHistoryEntities.add(firstHistoryEntity);
 			orderEntity.setListOrderHistoryEntities(listOrderHistoryEntities);
-			
+
 			List<OrderItemEntity> listOrderItemEntities = new ArrayList<>();
-			for(OrderItemsDto itemsDto : checkOutRequest.getListItem()) {
+			for (OrderItemsDto itemsDto : checkOutRequest.getListItem()) {
 				ProductColorEntity colorEntity = colorRepository.findOneById(itemsDto.getOrderColorId());
-				OrderItemEntity itemEntity = orderConverter.orderItemDtoToOrderItemEntity(orderEntity, colorEntity, itemsDto);
+				OrderItemEntity itemEntity = orderConverter.orderItemDtoToOrderItemEntity(orderEntity, colorEntity,
+						itemsDto);
 				listOrderItemEntities.add(itemEntity);
 			}
 			orderEntity.setListOrderItemEntities(listOrderItemEntities);
 
 			orderEntity = orderRepository.save(orderEntity);
-			
-			if(orderEntity!=null) {
+
+			if (orderEntity != null) {
 				orderEntity.setOrderCode("#DH000" + orderEntity.getId());
 				orderEntity = orderRepository.save(orderEntity);
 				dataResponse.setMessage("Thêm đơn hàng " + orderEntity.getId() + " thành công!");
 				dataResponse.setData("OK");
 				dataResponse.setSuccess(true);
 			}
-			
+
 		} catch (Exception e) {
 			dataResponse.setData("Error");
 			dataResponse.setErrorCode(e.getMessage());
@@ -216,6 +244,41 @@ public class OrderService implements IOrderService {
 				dataResponse.setData("Đơn hàng đã bị hủy!");
 				dataResponse.setSuccess(false);
 			}
+		} catch (Exception e) {
+			dataResponse.setData("Error");
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setSuccess(false);
+		}
+		return dataResponse;
+	}
+
+	@Override
+	public DataResponse getOrderByUser(String email, String status, int pageNumber) {
+		DataResponse dataResponse = new DataResponse();
+		try {
+			UsersEntity user = userRepository.findByEmail(email);
+			Pageable pageable = PageRequest.of(pageNumber - 1, 5);
+			Page<OrderEntity> orderPage = orderRepository.findByUsersEntityInOrderAndStatus(user, status, pageable);
+			long pageCount = 0;
+			long pageTotal = orderRepository.countByUsersEntityInOrderAndStatus(user, status);
+			if (pageTotal == 0) {
+				pageCount = 0;
+			} else {
+				if (orderRepository.count() % 10 == 0) {
+					pageCount = pageTotal / 10;
+				} else {
+					pageCount = pageTotal / 10 + 1;
+				}
+			}
+			List<OrderDto> listOrderDtos = new ArrayList<>();
+			for (OrderEntity orderEntity : orderPage) {
+				OrderDto orderDto = orderConverter.OrderEntityToOrderDto(orderEntity);
+				listOrderDtos.add(orderDto);
+			}
+			dataResponse.setMessage("Success!");
+			dataResponse.setPageData(pageCount);
+			dataResponse.setData(listOrderDtos);
+			dataResponse.setSuccess(true);
 		} catch (Exception e) {
 			dataResponse.setData("Error");
 			dataResponse.setErrorCode(e.getMessage());
