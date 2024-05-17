@@ -30,7 +30,7 @@ public class AdminOrderApi {
 	@PostMapping("/update")
 	public ResponseEntity<?> updateOrder(
 			@RequestParam("orderId")Long orderId,
-			@RequestParam("status") String status){
+			@RequestParam("status") int status){
 		return new ResponseEntity<>(iOrderService.updateOrder(orderId, status), HttpStatus.OK);
 	}
 	
@@ -38,5 +38,31 @@ public class AdminOrderApi {
 	public ResponseEntity<?> getOrderById(
 			@PathVariable("id") Long id){
 		return new ResponseEntity<>(iOrderService.getOrderById(id), HttpStatus.OK);
+	}
+	
+	@GetMapping("/getorderbyid")
+	public ResponseEntity<?> adminGetOrderById(
+			@RequestParam("id") Long id){
+		return new ResponseEntity<>(iOrderService.getOrderById(id), HttpStatus.OK);
+	}
+	
+	@GetMapping("/admin-search")
+	public ResponseEntity<?> adminSearchOrder(
+			@RequestParam("status") int status,
+			@RequestParam("gateway") int gateway,
+			@RequestParam("keyword") String keyword,
+			@RequestParam("pageNumber") int pageNumber){
+		return new ResponseEntity<>(iOrderService.getOrderAdminSearchOrder(status, gateway, keyword, pageNumber), HttpStatus.OK);
+	}
+	
+	@GetMapping("/admin-search2")
+	public ResponseEntity<?> adminSearchOrder2(
+			@RequestParam("status") int status,
+			@RequestParam("gateway") int gateway,
+			@RequestParam("keyword") String keyword,
+			@RequestParam("pageNumber") int pageNumber,
+			@RequestParam("startDate") String startDate,
+			@RequestParam("endDate") String endDate){
+		return new ResponseEntity<>(iOrderService.getOrderAdminSearchOrder2(status, gateway, keyword, startDate, endDate, pageNumber), HttpStatus.OK);
 	}
 }

@@ -29,12 +29,6 @@ public class CustomerOrderApi {
 		return new ResponseEntity<>(orderService.cancelOrder(orderId, email), HttpStatus.OK);
 	}
 	
-	@PostMapping("/insert")
-	public ResponseEntity<?> insertOrder(
-			@RequestBody CheckOutRequest checkOutRequest){
-		return new ResponseEntity<>(orderService.insertOrder(checkOutRequest), HttpStatus.OK);
-	}
-	
 	@PostMapping("/inserttest")
 	public ResponseEntity<?> insertTestOrder(
 			@RequestBody CheckOutRequest checkOutRequest){

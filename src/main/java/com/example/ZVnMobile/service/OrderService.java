@@ -24,10 +24,9 @@ import com.example.ZVnMobile.repository.OrderRepository;
 import com.example.ZVnMobile.repository.ProductColorRepository;
 import com.example.ZVnMobile.repository.UserRepository;
 import com.example.ZVnMobile.service.impl.IOrderHistoryService;
-import com.example.ZVnMobile.service.impl.IOrderItemService;
-import com.example.ZVnMobile.service.impl.IOrderPayMentService;
 import com.example.ZVnMobile.service.impl.IOrderService;
-import com.example.ZVnMobile.service.impl.IOrderTrackingService;
+import com.example.ZVnMobile.utils.PageUtils;
+import com.example.ZVnMobile.utils.ValidateUtils;
 
 @Service
 public class OrderService implements IOrderService {
@@ -42,41 +41,30 @@ public class OrderService implements IOrderService {
 	private UserRepository userRepository;
 
 	@Autowired
-	private IOrderTrackingService iTrackingService;
-
-	@Autowired
-	private IOrderPayMentService iPayMentService;
-
-	@Autowired
 	private IOrderHistoryService ihistoryService;
 
 	@Autowired
-	private IOrderItemService iOrderItemService;
+	private ProductColorRepository colorRepository;
 
 	@Autowired
-	private ProductColorRepository colorRepository;
+	private PageUtils pageUtils;
+	
+	@Autowired
+	private ValidateUtils validateUtils;
 
 	@Override
 	public DataResponse getAllOrder(int pageNumber) {
 		DataResponse dataResponse = new DataResponse();
 		List<OrderDto> listOrderDtos = new ArrayList<>();
 		try {
-			Pageable pageable = PageRequest.of(pageNumber - 1, 5);
+			Pageable pageable = PageRequest.of(pageNumber - 1, 10);
 			Page<OrderEntity> listOrderEntities = orderRepository.findAll(pageable);
-			long pageCount = 0;
-			long pageTotal = orderRepository.count();
-			if (orderRepository.count() % 10 == 0) {
-				pageCount = pageTotal / 10;
-			} else {
-				pageCount = pageTotal / 10 + 1;
-			}
-
 			for (OrderEntity orderEntity : listOrderEntities) {
 				OrderDto orderDto = orderConverter.OrderEntityToOrderDto(orderEntity);
 				listOrderDtos.add(orderDto);
 			}
 			dataResponse.setMessage("Success!");
-			dataResponse.setPageData(pageCount);
+			dataResponse.setPageData(pageUtils.getPageCount(listOrderEntities.getTotalElements(), 10));
 			dataResponse.setData(listOrderDtos);
 			dataResponse.setSuccess(true);
 		} catch (Exception e) {
@@ -85,18 +73,6 @@ public class OrderService implements IOrderService {
 			dataResponse.setSuccess(false);
 		}
 		return dataResponse;
-	}
-
-	@Override
-	public DataResponse getOrderByStatus(String status) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public DataResponse getOrderByUserId(Long userId) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -112,40 +88,6 @@ public class OrderService implements IOrderService {
 			dataResponse.setMessage("Error");
 			dataResponse.setSuccess(false);
 			dataResponse.setErrorCode(e.getMessage());
-		}
-		return dataResponse;
-	}
-
-	@Override
-	public DataResponse insertOrder(CheckOutRequest checkOutRequest) {
-		DataResponse dataResponse = new DataResponse();
-		try {
-			OrderEntity orderEntity = new OrderEntity();
-			UsersEntity usersEntity = userRepository.findByEmail(checkOutRequest.getEmail());
-			orderEntity.setUsersEntityInOrder(usersEntity);
-			orderEntity.setCustomerNote(checkOutRequest.getCustomerNote());
-			orderEntity.setCreatedAt(new Date());
-			orderEntity.setStatus("Chờ xác nhận");
-			orderEntity.setTotalPrice(checkOutRequest.getTotalPrice());
-			orderEntity.setOrderCode("#DH000" + "TEST");
-
-			orderEntity = orderRepository.save(orderEntity);
-
-			boolean isTrackingSuccess = iTrackingService.insertTracking(orderEntity,
-					checkOutRequest.getOrderTracking());
-			boolean isPaymentSuccess = iPayMentService.insertPayment(orderEntity, checkOutRequest.getOrderPayment());
-			boolean isFirstHitorySuccess = ihistoryService.insertFirstHistory(orderEntity);
-			boolean isOrderItemsSuccess = iOrderItemService.insertListOrderItems(orderEntity,
-					checkOutRequest.getListItem());
-			if (isTrackingSuccess == true && isPaymentSuccess == true && isFirstHitorySuccess == true
-					&& isOrderItemsSuccess == true) {
-				dataResponse.setData("OK");
-				dataResponse.setSuccess(true);
-			}
-		} catch (Exception e) {
-			dataResponse.setData("Error");
-			dataResponse.setErrorCode(e.getMessage());
-			dataResponse.setSuccess(false);
 		}
 		return dataResponse;
 	}
@@ -204,16 +146,28 @@ public class OrderService implements IOrderService {
 	}
 
 	@Override
-	public DataResponse updateOrder(Long orderId, String status) {
+	public DataResponse updateOrder(Long orderId, int status) {
 		DataResponse dataResponse = new DataResponse();
+		String statusStr = "Chờ xác nhận";
+		if (status == 1) {
+			statusStr = "Chờ xác nhận";
+		} else if (status == 2) {
+			statusStr = "Đang lấy hàng";
+		} else if (status == 3) {
+			statusStr = "Đang giao hàng";
+		} else if (status == 4) {
+			statusStr = "GH thành công";
+		} else if (status == 5) {
+			statusStr = "Đã hủy";
+		}
 		try {
 			OrderEntity orderEntity = orderRepository.findOneById(orderId);
-			orderEntity.setStatus(status);
-			if (status.equals("Đã nhận hàng")) {
+			orderEntity.setStatus(statusStr);
+			if (status == 4) {
 				orderEntity.setDeliveryAt(new Date());
 			}
 			orderEntity = orderRepository.save(orderEntity);
-			boolean isInsertHistory = ihistoryService.insertNewHistory(orderEntity, status);
+			boolean isInsertHistory = ihistoryService.insertNewHistory(orderEntity, statusStr);
 
 			if (isInsertHistory == true) {
 				dataResponse.setData("OK");
@@ -257,26 +211,15 @@ public class OrderService implements IOrderService {
 		DataResponse dataResponse = new DataResponse();
 		try {
 			UsersEntity user = userRepository.findByEmail(email);
-			Pageable pageable = PageRequest.of(pageNumber - 1, 5);
+			Pageable pageable = PageRequest.of(pageNumber - 1, 10);
 			Page<OrderEntity> orderPage = orderRepository.findByUsersEntityInOrderAndStatus(user, status, pageable);
-			long pageCount = 0;
-			long pageTotal = orderRepository.countByUsersEntityInOrderAndStatus(user, status);
-			if (pageTotal == 0) {
-				pageCount = 0;
-			} else {
-				if (orderRepository.count() % 10 == 0) {
-					pageCount = pageTotal / 10;
-				} else {
-					pageCount = pageTotal / 10 + 1;
-				}
-			}
 			List<OrderDto> listOrderDtos = new ArrayList<>();
 			for (OrderEntity orderEntity : orderPage) {
 				OrderDto orderDto = orderConverter.OrderEntityToOrderDto(orderEntity);
 				listOrderDtos.add(orderDto);
 			}
 			dataResponse.setMessage("Success!");
-			dataResponse.setPageData(pageCount);
+			dataResponse.setPageData(pageUtils.getPageCount(orderPage.getTotalElements(), 10));
 			dataResponse.setData(listOrderDtos);
 			dataResponse.setSuccess(true);
 		} catch (Exception e) {
@@ -286,5 +229,144 @@ public class OrderService implements IOrderService {
 		}
 		return dataResponse;
 	}
+
+	@Override
+	public DataResponse getOrderAdminSearchOrder(int status, int gateway, String keyword, int pageNumber) {
+		DataResponse dataResponse = new DataResponse();
+		String statusStr = "";
+		if (status == 0) {
+			statusStr = null;
+		} else if(status == 1) {
+			statusStr = "Chờ xác nhận";
+		} else if (status == 2) {
+			statusStr = "Đang lấy hàng";
+		} else if (status == 3) {
+			statusStr = "Đang giao hàng";
+		} else if (status == 4) {
+			statusStr = "GH thành công";
+		} else if (status == 5) {
+			statusStr = "Đã hủy";
+		}
+		String gatewayStr = "";
+		if(gateway == 0) {
+			gatewayStr = null;
+		} else if(gateway == 1) {
+			gatewayStr = "Thanh toán khi nhận hàng";
+		} else if(gateway == 2) {
+			gatewayStr = "VNPAY";
+		} else if(gateway == 3) {
+			gatewayStr = "ZALOPAY";
+		}
+		if (keyword.equals("EMPTY")) {
+			keyword = null;
+		}
+		try {
+			Pageable pageable = PageRequest.of(pageNumber - 1, 10);
+			Page<OrderEntity> orderPage = orderRepository.findOrdersByStatusAndGatewayAndKeyword(statusStr, gatewayStr, keyword, pageable);
+			List<OrderDto> listOrderDtos = new ArrayList<>();
+			for (OrderEntity orderEntity : orderPage) {
+				OrderDto orderDto = orderConverter.OrderEntityToOrderDto(orderEntity);
+				listOrderDtos.add(orderDto);
+			}
+			dataResponse.setMessage("Success!");
+			dataResponse.setPageData(pageUtils.getPageCount(orderPage.getTotalElements(), 10));
+			dataResponse.setData(listOrderDtos);
+			dataResponse.setSuccess(true);
+		} catch (Exception e) {
+			dataResponse.setData("Error");
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setSuccess(false);
+		}
+		return dataResponse;
+	}
+
+	@Override
+	public DataResponse getOrderAdminSearchOrder2(int status, int gateway, String keyword, String startDate,
+		String endDate, int pageNumber) {
+		DataResponse dataResponse = new DataResponse();
+		String statusStr = "";
+		if (status == 0) {
+			statusStr = null;
+		} else if(status == 1) {
+			statusStr = "Chờ xác nhận";
+		} else if (status == 2) {
+			statusStr = "Đang lấy hàng";
+		} else if (status == 3) {
+			statusStr = "Đang giao hàng";
+		} else if (status == 4) {
+			statusStr = "GH thành công";
+		} else if (status == 5) {
+			statusStr = "Đã hủy";
+		}
+		String gatewayStr = "";
+		if(gateway == 0) {
+			gatewayStr = null;
+		} else if(gateway == 1) {
+			gatewayStr = "Thanh toán khi nhận hàng";
+		} else if(gateway == 2) {
+			gatewayStr = "VNPAY";
+		} else if(gateway == 3) {
+			gatewayStr = "ZALOPAY";
+		}
+		if (keyword.equals("EMPTY")) {
+			keyword = null;
+		}
+		Date startDateFinal;
+		Date endDateFinal;
+		if(startDate.equals("EMPTY") || endDate.equals("EMPTY")) {
+			startDateFinal = null;
+			endDateFinal = null;
+		} else {
+			startDateFinal = validateUtils.convertStringToDate(startDate);
+			endDateFinal = validateUtils.convertStringToDate(endDate);
+		}
+		try {
+			Pageable pageable = PageRequest.of(pageNumber - 1, 10);
+			Page<OrderEntity> orderPage = orderRepository.adminFind2OrderSort(
+					statusStr, gatewayStr, keyword, gatewayStr, startDateFinal, endDateFinal, pageable);
+			List<OrderDto> listOrderDtos = new ArrayList<>();
+			for (OrderEntity orderEntity : orderPage) {
+				OrderDto orderDto = orderConverter.OrderEntityToOrderDto(orderEntity);
+				listOrderDtos.add(orderDto);
+			}
+			dataResponse.setMessage("Success!");
+			dataResponse.setPageData(pageUtils.getPageCount(orderPage.getTotalElements(), 10));
+			dataResponse.setData(listOrderDtos);
+			dataResponse.setSuccess(true);
+		} catch (Exception e) {
+			dataResponse.setData("Error");
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setSuccess(false);
+		}
+		return dataResponse;
+	}
+
+	@Override
+	public DataResponse test(Date startDate, Date endDate) {
+		DataResponse dataResponse = new DataResponse();
+		if(startDate==null || endDate==null) {
+			startDate = null;
+			endDate = null;
+		}
+		try {
+			List<OrderEntity> orderPage = orderRepository.testOrder(startDate, endDate);
+			List<OrderDto> listOrderDtos = new ArrayList<>();
+			for (OrderEntity orderEntity : orderPage) {
+				OrderDto orderDto = orderConverter.OrderEntityToOrderDto(orderEntity);
+				listOrderDtos.add(orderDto);
+			}
+			dataResponse.setMessage("Success!");
+			dataResponse.setPageData(orderPage.size());
+			dataResponse.setData(listOrderDtos);
+			dataResponse.setSuccess(true);
+		} catch (Exception e) {
+			dataResponse.setData("Error");
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setSuccess(false);
+		}
+		return dataResponse;
+	}
+	
+	
 
 }
