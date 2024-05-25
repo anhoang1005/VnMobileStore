@@ -132,4 +132,25 @@ public class SupplierService implements ISupplierService {
 		return dataResponse;
 	}
 
+	@Override
+	public DataResponse getByStatus(Boolean deleted) {
+		DataResponse dataResponse = new DataResponse();
+		try {
+			List<SupplierEntity> listSupplier = supplerRepository.findByDeleted(deleted);
+			List<SupplierDto> listDtos = new ArrayList<>();
+			for(SupplierEntity supplierEntity: listSupplier) {
+				SupplierDto supplierDto = supplierConverter.entityToDto(supplierEntity);
+				listDtos.add(supplierDto);
+			}
+			dataResponse.setMessage("OK");
+			dataResponse.setData(listDtos);
+			dataResponse.setSuccess(true);
+		} catch (Exception e) {
+			dataResponse.setMessage("Error");
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setSuccess(false);
+		}
+		return dataResponse;
+	}
+
 }

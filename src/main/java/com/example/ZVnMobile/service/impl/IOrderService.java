@@ -1,7 +1,5 @@
 package com.example.ZVnMobile.service.impl;
 
-import java.util.Date;
-
 import com.example.ZVnMobile.payload.DataResponse;
 import com.example.ZVnMobile.payload.request.CheckOutRequest;
 
@@ -14,5 +12,4 @@ public interface IOrderService {
 	DataResponse insertOrderTest(CheckOutRequest checkOutRequest);
 	DataResponse updateOrder(Long orderId , int status);
 	DataResponse cancelOrder(Long orderId, String email);
-	DataResponse test(Date startDate, Date endDate);
 }

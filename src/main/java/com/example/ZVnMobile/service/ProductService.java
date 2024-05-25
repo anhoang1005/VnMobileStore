@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,6 +32,7 @@ import com.example.ZVnMobile.repository.CategoryRepositry;
 import com.example.ZVnMobile.repository.ProductRepository;
 import com.example.ZVnMobile.repository.SupplierRepository;
 import com.example.ZVnMobile.service.impl.IProductService;
+import com.example.ZVnMobile.utils.PageUtils;
 
 @Service
 public class ProductService implements IProductService {
@@ -55,6 +57,9 @@ public class ProductService implements IProductService {
 
 	@Autowired
 	private ProductTypeConverter typeConverter;
+
+	@Autowired
+	private PageUtils pageUtils;
 
 	@Override
 	public DataResponse getAllProductCard(int pageNumber) {
@@ -101,6 +106,7 @@ public class ProductService implements IProductService {
 			ProductEntity entity = productRepository.findOneById(id);
 			dataResponse.setData(productConvertter.entityToProductCardDto(entity));
 			dataResponse.setSuccess(true);
+			dataResponse.setMessage("OK");
 		} catch (Exception e) {
 			dataResponse.setSuccess(false);
 			dataResponse.setErrorCode(e.getMessage());
@@ -340,6 +346,89 @@ public class ProductService implements IProductService {
 		} catch (Exception e) {
 			dataResponse.setSuccess(false);
 			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
+		}
+		return dataResponse;
+	}
+
+	@Override
+	public DataResponse getProductAdminDashboard(Long cateId, Long supplierId, Boolean status, int sort,
+			int pageNumber) {
+		DataResponse dataResponse = new DataResponse();
+		if (cateId == 0) {
+			cateId = null;
+		}
+		if (supplierId == 0) {
+			supplierId = null;
+		}
+		try {
+			Sort sortFinal = Sort.by(Sort.Order.desc("id"));
+			if (sort == 0) {
+				sortFinal = Sort.by(Sort.Order.desc("id"));
+			} else if (sort == 1) {
+				sortFinal = Sort.by(Sort.Order.asc("id"));
+			}
+			Pageable pageable = PageRequest.of(pageNumber - 1, 15, sortFinal);
+			Page<ProductEntity> listPage = productRepository.findByCategoryAndSupplierAndStatusAndSort(status, cateId,
+					supplierId, pageable);
+			List<ProductDashBoardDto> listDtos = new ArrayList<>();
+			for (ProductEntity entity : listPage) {
+				ProductDashBoardDto dto = productConvertter.entityToProductDashBoardDto(entity);
+				listDtos.add(dto);
+			}
+			dataResponse.setSuccess(true);
+			dataResponse.setData(listDtos);
+			dataResponse.setPageData(pageUtils.getPageCount(listPage.getTotalElements(), 15));
+			dataResponse.setMessage("OK");
+		} catch (Exception e) {
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setMessage("Error");
+			dataResponse.setSuccess(false);
+		}
+		return dataResponse;
+	}
+
+	@Override
+	public DataResponse getProductByTitleLike(String title, int pageNumber) {
+		DataResponse dataResponse = new DataResponse();
+		try {
+			Sort sort = Sort.by(Sort.Order.desc("id"));
+			Pageable pageable = PageRequest.of(pageNumber - 1, 15, sort);
+			Page<ProductEntity> listPage = productRepository.findByTitleKeyWord(title, pageable);
+			List<ProductDashBoardDto> listDtos = new ArrayList<>();
+			for (ProductEntity productEntity : listPage) {
+				ProductDashBoardDto dto = productConvertter.entityToProductDashBoardDto(productEntity);
+				listDtos.add(dto);
+			}
+			dataResponse.setData(listDtos);
+			dataResponse.setMessage("OK");
+			dataResponse.setSuccess(true);
+			dataResponse.setPageData(pageUtils.getPageCount(listPage.getTotalElements(), 15));
+		} catch (Exception e) {
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setSuccess(false);
+			dataResponse.setMessage("Error");
+		}
+		return dataResponse;
+	}
+
+	@Override
+	public DataResponse getProductByIdDashBoard(Long id) {
+		DataResponse dataResponse = new DataResponse();
+		try {
+			ProductEntity entity = productRepository.findOneById(id);
+			if (entity != null) {
+				dataResponse.setData(productConvertter.entityToProductDashBoardDto(entity));
+				dataResponse.setMessage("OK");
+				dataResponse.setSuccess(true);
+			} else {
+				dataResponse.setData(null);
+				dataResponse.setMessage("OK");
+				dataResponse.setSuccess(true);
+			}
+		} catch (Exception e) {
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setSuccess(false);
 			dataResponse.setMessage("Error");
 		}
 		return dataResponse;

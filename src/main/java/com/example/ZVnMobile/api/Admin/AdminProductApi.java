@@ -95,4 +95,27 @@ public class AdminProductApi {
 	public ResponseEntity<?> getTypeProduct(@PathVariable("id")Long id){
 		return new ResponseEntity<>(itypeService.getTypeByProductId(id), HttpStatus.OK);
 	}
+	
+	@GetMapping("/getdashboard")
+	public ResponseEntity<?> getDashBoard1(
+			@RequestParam("category") Long categoryId,
+			@RequestParam("supplier") Long supplierId,
+			@RequestParam("status") Boolean status,
+			@RequestParam("sort") int sort,
+			@RequestParam("pageNumber") int pageNumber){
+		return new ResponseEntity<>(iProductService.getProductAdminDashboard(categoryId, supplierId, status, sort, pageNumber), HttpStatus.OK);
+	}
+	
+	@GetMapping("/searchById/{id}")
+	public ResponseEntity<?> getByIdDashBoardProduct(
+			@PathVariable("id")Long id){
+		return new ResponseEntity<>(iProductService.getProductByIdDashBoard(id), HttpStatus.OK);
+	}
+	
+	@GetMapping("/searchByTitle")
+	public ResponseEntity<?> getByTitleDashBoardProduct(
+			@RequestParam("title") String title,
+			@RequestParam("pageNumber") int pageNumber){
+		return new ResponseEntity<>(iProductService.getProductByTitleLike(title, pageNumber), HttpStatus.OK);
+	}
 }

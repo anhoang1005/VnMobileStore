@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import com.example.ZVnMobile.entities.OrderEntity;
 import com.example.ZVnMobile.entities.UsersEntity;
 
@@ -92,9 +91,61 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
             @Param("endDate") Date endDate,
             Pageable pageable);
 	
-	@Query(value = "SELECT o FROM OrderEntity o "
-            + "WHERE (:startDate IS NULL OR o.createdAt >= :startDate) "
-            + "AND (:endDate IS NULL OR o.createdAt <= :endDate)")
-	List<OrderEntity> testOrder(Date startDate, Date endDate);
+	@Query(value = "SELECT YEAR(o.created_at) AS Year, " +
+            "       MONTH(o.created_at) AS Month, " +
+            "       COUNT(*) AS TotalOrders, " +
+            "       SUM(o.total_price) AS Revenue " +
+            "FROM orders o " +
+            "WHERE YEAR(o.created_at) = :year " +
+            "GROUP BY YEAR(o.created_at), MONTH(o.created_at) " +
+            "ORDER BY Year, Month", 
+            nativeQuery = true)
+	List<Object[]> getMonthlyOrderStatistics(@Param("year") int year);
+	
+	@Query(value = "WITH RECURSIVE years AS ("
+			+ "    SELECT YEAR(CURDATE()) AS year "
+			+ "    UNION"
+			+ "    SELECT year - 1 "
+			+ "    FROM years "
+			+ "    WHERE year > YEAR(CURDATE()) - 9 "
+			+ ")"
+			+ "SELECT "
+			+ "    y.year, "
+			+ "    IFNULL(SUM(o.total_price), 0) AS total_price, "
+			+ "    IFNULL(COUNT(o.id), 0) AS order_count "
+			+ "FROM years y "
+			+ "LEFT JOIN vnmobilestore.orders o ON y.year = YEAR(o.created_at) "
+			+ "GROUP BY y.year "
+			+ "ORDER BY y.year ASC;", nativeQuery = true)
+	List<Object[]> getSaleOrderOn10Year();
+	
+	@Query(value = "SELECT "
+            + "    YEAR(created_at) AS year, "
+            + "    SUM(total_price) AS total_price, "
+            + "    COUNT(id) AS order_count "
+            + "FROM vnmobilestore.orders "
+            + "GROUP BY YEAR(created_at) "
+            + "HAVING SUM(total_price) > 0 "
+            + "ORDER BY year ASC;", 
+            nativeQuery = true)
+	List<Object[]> getSaleOrderOnAllYears();
+	
+	@Query(value = "SELECT "
+            + "    CONCAT('Quý ', quarters.quarter) AS quarter, "
+            + "    COALESCE(SUM(orders.total_price), 0) AS total_revenue, "
+            + "    COALESCE(COUNT(orders.created_at), 0) AS total_count "
+            + "FROM ( "
+            + "    SELECT 1 AS quarter "
+            + "    UNION SELECT 2 "
+            + "    UNION SELECT 3 "
+            + "    UNION SELECT 4 "
+            + ") AS quarters "
+            + "LEFT JOIN vnmobilestore.orders orders ON quarters.quarter = QUARTER(orders.created_at) AND YEAR(orders.created_at) = :year "
+            + "GROUP BY quarters.quarter "
+            + "ORDER BY quarters.quarter", 
+            nativeQuery = true)
+	List<Object[]> getSaleOrderByQuaterOnYear(@Param("year") int year);
 
+
+	
 }

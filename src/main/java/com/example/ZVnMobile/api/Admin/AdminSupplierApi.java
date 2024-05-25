@@ -71,5 +71,12 @@ public class AdminSupplierApi {
 			@PathVariable("pageNumber") int page){
 		return new ResponseEntity<>(iSupplierBillService.getAllSupplierBill(page), HttpStatus.OK);
 	}
+	
+	
+	@GetMapping("/getbystatus")
+	public ResponseEntity<?> getByStatusSupplier(
+			@RequestParam("deleted") Boolean deleted){
+		return new ResponseEntity<>(iSupplierService.getByStatus(deleted), HttpStatus.OK);
+	}
 
 }

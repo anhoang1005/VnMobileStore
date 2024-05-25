@@ -53,4 +53,10 @@ public class AdminCategoryApi {
 		return new ResponseEntity<>(iCategoryService.getBySearch(keyword), HttpStatus.OK);
 	}
 	
+	@GetMapping("/getbystatus")
+	public ResponseEntity<?> getByStatusCategory(
+			@RequestParam("deleted") Boolean deleted){
+		return new ResponseEntity<>(iCategoryService.getByDeleted(deleted), HttpStatus.OK);
+	}
+	
 }

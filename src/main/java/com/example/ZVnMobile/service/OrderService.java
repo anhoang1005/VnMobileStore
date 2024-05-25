@@ -1,8 +1,10 @@
 package com.example.ZVnMobile.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.example.ZVnMobile.convert.OrderConverter;
 import com.example.ZVnMobile.dto.OrderDto;
 import com.example.ZVnMobile.dto.OrderItemsDto;
+import com.example.ZVnMobile.dto.SaleOrderDto;
 import com.example.ZVnMobile.entities.OrderEntity;
 import com.example.ZVnMobile.entities.OrderHistoryEntity;
 import com.example.ZVnMobile.entities.OrderItemEntity;
@@ -340,33 +343,4 @@ public class OrderService implements IOrderService {
 		}
 		return dataResponse;
 	}
-
-	@Override
-	public DataResponse test(Date startDate, Date endDate) {
-		DataResponse dataResponse = new DataResponse();
-		if(startDate==null || endDate==null) {
-			startDate = null;
-			endDate = null;
-		}
-		try {
-			List<OrderEntity> orderPage = orderRepository.testOrder(startDate, endDate);
-			List<OrderDto> listOrderDtos = new ArrayList<>();
-			for (OrderEntity orderEntity : orderPage) {
-				OrderDto orderDto = orderConverter.OrderEntityToOrderDto(orderEntity);
-				listOrderDtos.add(orderDto);
-			}
-			dataResponse.setMessage("Success!");
-			dataResponse.setPageData(orderPage.size());
-			dataResponse.setData(listOrderDtos);
-			dataResponse.setSuccess(true);
-		} catch (Exception e) {
-			dataResponse.setData("Error");
-			dataResponse.setErrorCode(e.getMessage());
-			dataResponse.setSuccess(false);
-		}
-		return dataResponse;
-	}
-	
-	
-
 }

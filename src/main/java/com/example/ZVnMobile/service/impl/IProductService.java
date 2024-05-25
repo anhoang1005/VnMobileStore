@@ -19,5 +19,10 @@ public interface IProductService {
 	DataResponse getProductDetail(String productSlug);
 	DataResponse getProductBySupplier(Long id, int pageNumber);
 	DataResponse getProductDashboard(int pageNumber);
+	
+	DataResponse getProductAdminDashboard(Long cateId, Long supplierId, Boolean status, int sort, int pageNumber);
+	DataResponse getProductByTitleLike(String title, int PageNumber);
+	DataResponse getProductByIdDashBoard(Long id);
+	
 	DataResponse lockOrUnlockProduct(Long id, boolean deleted);
 }

@@ -208,4 +208,25 @@ public class CategoryService implements ICategoryService {
 		return dataResponse;
 	}
 
+	@Override
+	public DataResponse getByDeleted(boolean deleted) {
+		DataResponse dataResponse = new DataResponse();
+		try {
+			List<CategoryEntity> listCategory = categoryRepositry.findByDeleted(deleted);
+			List<CategoryDto> listDtos = new ArrayList<>();
+			for(CategoryEntity categoryEntity : listCategory) {
+				CategoryDto categoryDto = categoryConverter.entityToDto(categoryEntity);
+				listDtos.add(categoryDto);
+			}
+			dataResponse.setData(listDtos);
+			dataResponse.setMessage("OK");
+			dataResponse.setSuccess(true);
+		} catch (Exception e) {
+			dataResponse.setErrorCode(e.getMessage());
+			dataResponse.setSuccess(false);
+			dataResponse.setMessage("Error");
+		}
+		return dataResponse;
+	}
+
 }

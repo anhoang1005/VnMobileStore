@@ -12,4 +12,5 @@ public interface ICategoryService {
 	DataResponse updateCategory(CategoryDto categoryDto);
 	DataResponse lockOrUnlockCategory(Long id, boolean status);
 	DataResponse getBySearch(String text);
+	DataResponse getByDeleted(boolean deleted);
 }

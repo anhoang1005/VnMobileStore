@@ -12,4 +12,5 @@ public interface CategoryRepositry extends JpaRepository<CategoryEntity, Long>{
 	CategoryEntity findOneByCategoryName(String categoryName);
 	CategoryEntity findOneById(Long id);
 	List<CategoryEntity> findByCategoryNameLike(String text);
+	List<CategoryEntity> findByDeleted(boolean deleted);
 }
